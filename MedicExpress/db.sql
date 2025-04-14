@@ -1,104 +1,102 @@
--- Suppression des tables si elles existent déjà
-DROP TABLE IF EXISTS Message, Avis, Livraison, Commande, Ordonnance, Pharmacien, Pharmacie,
-                     Livreur, Médecin, Patient, Administrateur CASCADE;
+-- Suppression des tables existantes
+DROP TABLE IF EXISTS message, avis, livraison, commande, ordonnance,
+                      pharmacien, pharmacie, livreur, medecin, patient,
+                      utilisateur, administrateur CASCADE;
 
--- Table Administrateur
-CREATE TABLE Administrateur (
+-- Table utilisateur (user parent)
+CREATE TABLE utilisateur (
+    id_user SERIAL PRIMARY KEY,
+    nom VARCHAR(100),
+    prenom VARCHAR(100),
+    email VARCHAR(150) UNIQUE NOT NULL,
+    mot_de_passe TEXT,
+    type VARCHAR(20) CHECK (type IN ('patient', 'medecin', 'pharmacien', 'livreur'))
+);
+
+-- Table administrateur
+CREATE TABLE administrateur (
     id_admin SERIAL PRIMARY KEY,
     nom VARCHAR(100),
-    prénom VARCHAR(100),
-    email VARCHAR(150) UNIQUE
+    prenom VARCHAR(100),
+    email VARCHAR(150) UNIQUE NOT NULL
 );
 
--- Table Patient
-CREATE TABLE Patient (
-    id_patient SERIAL PRIMARY KEY,
-    nom VARCHAR(100),
-    prénom VARCHAR(100),
+-- Table patient (hérite de utilisateur)
+CREATE TABLE patient (
+    id_patient INTEGER PRIMARY KEY REFERENCES utilisateur(id_user) ON DELETE CASCADE,
     adresse TEXT,
-    email VARCHAR(150) UNIQUE,
-    mot_de_passe TEXT,
-    numéro_sécu VARCHAR(20)
+    numero_secu VARCHAR(20)
 );
 
--- Table Médecin
-CREATE TABLE Médecin (
-    id_médecin SERIAL PRIMARY KEY,
-    nom VARCHAR(100),
-    prénom VARCHAR(100),
-    email VARCHAR(150) UNIQUE,
-    spécialité VARCHAR(100)
+-- Table medecin (hérite de utilisateur)
+CREATE TABLE medecin (
+    id_medecin INTEGER PRIMARY KEY REFERENCES utilisateur(id_user) ON DELETE CASCADE,
+    specialite VARCHAR(100)
 );
 
--- Table Ordonnance
-CREATE TABLE Ordonnance (
-    id_ordonnance SERIAL PRIMARY KEY,
-    QR_code TEXT,
-    date_creation DATE,
-    id_patient INTEGER REFERENCES Patient(id_patient) ON DELETE CASCADE,
-    id_médecin INTEGER REFERENCES Médecin(id_médecin) ON DELETE CASCADE
-);
-
--- Table Pharmacie
-CREATE TABLE Pharmacie (
+-- Table pharmacie
+CREATE TABLE pharmacie (
     id_pharmacie SERIAL PRIMARY KEY,
     nom VARCHAR(100),
     adresse TEXT
 );
 
--- Table Pharmacien
-CREATE TABLE Pharmacien (
-    id_pharmacien SERIAL PRIMARY KEY,
-    nom VARCHAR(100),
-    prénom VARCHAR(100),
-    email VARCHAR(150) UNIQUE,
-    pharmacie_id INTEGER REFERENCES Pharmacie(id_pharmacie) ON DELETE CASCADE
+-- Table pharmacien (hérite de utilisateur)
+CREATE TABLE pharmacien (
+    id_pharmacien INTEGER PRIMARY KEY REFERENCES utilisateur(id_user) ON DELETE CASCADE,
+    pharmacie_id INTEGER REFERENCES pharmacie(id_pharmacie) ON DELETE CASCADE
 );
 
--- Table Commande
-CREATE TABLE Commande (
+-- Table livreur (hérite de utilisateur)
+CREATE TABLE livreur (
+    id_livreur INTEGER PRIMARY KEY REFERENCES utilisateur(id_user) ON DELETE CASCADE,
+    vehicule VARCHAR(50)
+);
+
+-- Table ordonnance
+CREATE TABLE ordonnance (
+    id_ordonnance SERIAL PRIMARY KEY,
+    qr_code TEXT,
+    date_creation DATE,
+    id_patient INTEGER REFERENCES patient(id_patient) ON DELETE CASCADE,
+    id_medecin INTEGER REFERENCES medecin(id_medecin) ON DELETE CASCADE
+);
+
+-- Table commande
+CREATE TABLE commande (
     id_commande SERIAL PRIMARY KEY,
     statut VARCHAR(50),
     date_commande DATE,
     montant NUMERIC(10,2),
-    code_sécurité VARCHAR(100),
-    id_ordonnance INTEGER REFERENCES Ordonnance(id_ordonnance) ON DELETE CASCADE,
-    id_patient INTEGER REFERENCES Patient(id_patient) ON DELETE CASCADE,
-    id_pharmacie INTEGER REFERENCES Pharmacie(id_pharmacie) ON DELETE CASCADE
+    code_securite VARCHAR(100),
+    id_ordonnance INTEGER REFERENCES ordonnance(id_ordonnance) ON DELETE CASCADE,
+    id_patient INTEGER REFERENCES patient(id_patient) ON DELETE CASCADE,
+    id_pharmacie INTEGER REFERENCES pharmacie(id_pharmacie) ON DELETE CASCADE
 );
 
--- Table Livreur
-CREATE TABLE Livreur (
-    id_livreur SERIAL PRIMARY KEY,
-    nom VARCHAR(100),
-    prénom VARCHAR(100),
-    email VARCHAR(150) UNIQUE,
-    véhicule VARCHAR(50)
-);
-
--- Table Livraison
-CREATE TABLE Livraison (
+-- Table livraison
+CREATE TABLE livraison (
     id_livraison SERIAL PRIMARY KEY,
     date_livraison DATE,
     statut VARCHAR(50),
-    id_commande INTEGER REFERENCES Commande(id_commande) ON DELETE CASCADE,
-    id_livreur INTEGER REFERENCES Livreur(id_livreur) ON DELETE CASCADE
+    id_commande INTEGER REFERENCES commande(id_commande) ON DELETE CASCADE,
+    id_livreur INTEGER REFERENCES livreur(id_livreur) ON DELETE CASCADE
 );
 
--- Table Avis
-CREATE TABLE Avis (
+-- Table avis
+CREATE TABLE avis (
     id_avis SERIAL PRIMARY KEY,
     note INTEGER CHECK (note >= 1 AND note <= 5),
     commentaire TEXT,
-    id_patient INTEGER REFERENCES Patient(id_patient) ON DELETE CASCADE,
-    id_livreur INTEGER REFERENCES Livreur(id_livreur) ON DELETE CASCADE
+    id_patient INTEGER REFERENCES patient(id_patient) ON DELETE CASCADE,
+    id_livreur INTEGER REFERENCES livreur(id_livreur) ON DELETE CASCADE
 );
 
--- Table Message
-CREATE TABLE Message (
+-- Table message
+CREATE TABLE message (
     id_message SERIAL PRIMARY KEY,
     contenu TEXT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_admin INTEGER REFERENCES Administrateur(id_admin) ON DELETE CASCADE,
-    id_patient INTEGER REFERENCES Patient(id_patient) ON DELETE CASCADE
+    id_admin INTEGER REFERENCES administrateur(id_admin) ON DELETE CASCADE,
+    id_patient INTEGER REFERENCES patient(id_patient) ON DELETE CASCADE
 );
