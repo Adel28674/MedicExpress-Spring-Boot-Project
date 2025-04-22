@@ -16,17 +16,16 @@ CREATE TABLE patient (
 );
 
 CREATE TABLE deliveryDriver (
-    id INT PRIMARY KEY,
+    kbis INT PRIMARY KEY,
     rate INT,
     available BOOLEAN,
     currentOrder INT,
-    FOREIGN KEY (id) REFERENCES users(id)
+    FOREIGN KEY (kbis) REFERENCES users(id)
 );
 
 CREATE TABLE doctor (
-    id INT PRIMARY KEY,
-    RPPS INT,
-    FOREIGN KEY (id) REFERENCES users(id)
+    RPPS INT PRIMARY KEY,
+    FOREIGN KEY (RPPS) REFERENCES users(id)
 );
 
 CREATE TABLE administrator (
