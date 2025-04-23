@@ -2,10 +2,12 @@ package com.example.MedicExpress.Controller;
 
 import com.example.MedicExpress.Exception.UserAlreadyExistException;
 import com.example.MedicExpress.Model.UserEntity;
+import com.example.MedicExpress.SerializationClass.AuthRequest;
 import com.example.MedicExpress.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class UserController {
 
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(@RequestBody UserEntity userEntity){
-//        userEntity.setPassword(userService.cryptPassword(userEntity.getPassword()));
+        userEntity.setPassword(userService.cryptPassword(userEntity.getPassword()));
         try{
             userService.register(userEntity);
         }catch (RuntimeException e){
@@ -46,9 +48,9 @@ public class UserController {
 
     @PostMapping("/addUsers")
     public ResponseEntity<String> addUsers(@RequestBody List<UserEntity> usersEntity){
-//        usersEntity.forEach(userEntity -> {
-//            userEntity.setPassword(userService.cryptPassword(userEntity.getPassword()));
-//        });
+        usersEntity.forEach(userEntity -> {
+            userEntity.setPassword(userService.cryptPassword(userEntity.getPassword()));
+        });
         userService.addUsers(usersEntity);
         return ResponseEntity.ok("the users have been added");
     }
@@ -78,5 +80,14 @@ public class UserController {
         return ResponseEntity.ok("");
     }
 
+    @PostMapping("/authentification")
+    public ResponseEntity<String> authentification(@RequestBody AuthRequest authRequest){
+        return ResponseEntity.ok(userService.authentificate(authRequest.getEmail(), authRequest.getPassword()));
+    }
+
+//    @PostMapping("/getUsernameFromToken/{token}")
+//    public ResponseEntity<String> getUsernameFromToken(@PathVariable String token){
+//        return ResponseEntity.ok(userService.getUsernameFromToken(token));
+//    }
 
 }

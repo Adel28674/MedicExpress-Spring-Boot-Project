@@ -6,15 +6,21 @@ import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final BCryptPasswordEncoder bc ;
+
 
     public UserEntity getUserById(Long userId){
         return userRepository.findById(userId).orElseThrow(()->new UserDoesNotExistException(userId));
@@ -51,6 +57,19 @@ public class UserService {
         userRepository.deleteAll();
     }
 
+    public String authentificate(String username, String password) {
+        Optional<UserEntity> userOptional = userRepository.findByEmail(username);
 
+        if (userOptional.isPresent() && userOptional.get().getPassword().equals(password)) {
+//            return jwtUtil.generateToken(userOptional.get());
+            return null;
+        } else {
+            throw new RuntimeException("Invalid credentials");
+        }
+    }
+
+    public String cryptPassword(String password){
+        return bc.encode(password);
+    }
 
 }
