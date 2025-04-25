@@ -8,19 +8,19 @@ import lombok.Setter;
 @Getter
 //@Table(name = "users")
 @Entity
-public class Doctor {
+public class DoctorEntity {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+//    @Column(name = "id")
     private Long id;
 
     @Column(name = "rpps")
     private String rpps;
 
 
-    public Doctor(String rpps) {
+    public DoctorEntity(String rpps) {
         this.rpps = rpps;
     }
 

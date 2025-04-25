@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 //@Table(name = "users")
-public class Prescription {
+public class PrescriptionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,16 +23,22 @@ public class Prescription {
     private String code;
 
     @ManyToOne
-    private Doctor doctor;
+    @Column(name = "id")
+    private DoctorEntity doctorEntity;
 
     @ElementCollection
+    @Column(name = "id")
     private List<String> medicaments;
 
-    public Prescription( String code, Doctor doctor, List<String> medicaments){
+    @Column(name = "id")
+    private PatientEntity patient;
+
+    public PrescriptionEntity(String code, DoctorEntity doctorEntity, List<String> medicaments, PatientEntity patient){
 
         this.code = code;
-        this.doctor = doctor ;
+        this.doctorEntity = doctorEntity;
         this.medicaments = medicaments;
+        this.patient = patient;
 
     }
 

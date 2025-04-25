@@ -1,5 +1,5 @@
 package com.example.MedicExpress.Service;
-import com.example.MedicExpress.Model.Doctor;
+import com.example.MedicExpress.Model.DoctorEntity;
 
 
 import com.example.MedicExpress.Repository.DoctorRepository;
@@ -13,11 +13,11 @@ public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    public List<Doctor> getAllMedecins() {
+    public List<DoctorEntity> getAllMedecins() {
         return doctorRepository.findAll();
     }
 
-    public Doctor getMedecinById(Long id) {
+    public DoctorEntity getMedecinById(Long id) {
         return doctorRepository.findById(id).orElse(null);
     }
 

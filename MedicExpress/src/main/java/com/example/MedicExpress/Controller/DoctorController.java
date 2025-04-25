@@ -1,6 +1,6 @@
 package com.example.MedicExpress.Controller;
 
-import com.example.MedicExpress.Model.Doctor;
+import com.example.MedicExpress.Model.DoctorEntity;
 import com.example.MedicExpress.Service.DoctorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ public class DoctorController {
     private DoctorService doctorService;
 
     @GetMapping
-    public List<Doctor> getAllMedecins() {
+    public List<DoctorEntity> getAllMedecins() {
         return doctorService.getAllMedecins();
     }
 
     @GetMapping("/{id}")
-    public Doctor getMedecin(@PathVariable Long id) {
+    public DoctorEntity getMedecin(@PathVariable Long id) {
         return doctorService.getMedecinById(id);
     }
 

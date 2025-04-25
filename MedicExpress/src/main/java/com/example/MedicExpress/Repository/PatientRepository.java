@@ -1,10 +1,9 @@
 package com.example.MedicExpress.Repository;
 
-import com.example.MedicExpress.Model.PrescriptionEntity;
+
+import com.example.MedicExpress.Model.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PrescriptionRepository extends JpaRepository<PrescriptionEntity, Long> {}
-
-
+public interface PatientRepository extends JpaRepository<PatientEntity, Long>{}

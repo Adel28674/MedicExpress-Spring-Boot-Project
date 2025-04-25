@@ -1,9 +1,11 @@
 package com.example.MedicExpress.Service;
 
 
-import com.example.MedicExpress.Model.Doctor;
-import com.example.MedicExpress.Model.Prescription;
+import com.example.MedicExpress.Model.DoctorEntity;
+import com.example.MedicExpress.Model.PatientEntity;
+import com.example.MedicExpress.Model.PrescriptionEntity;
 import com.example.MedicExpress.Repository.DoctorRepository;
+import com.example.MedicExpress.Repository.PatientRepository;
 import com.example.MedicExpress.Repository.PrescriptionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class PrescriptionService {
     @Autowired
     private DoctorRepository doctorRepository;
 
+    @Autowired
+    private PatientRepository patientRepository;
+
     public String generateRandomCode(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         SecureRandom random = new SecureRandom();
@@ -31,11 +36,12 @@ public class PrescriptionService {
         return code.toString();
     }
 
-    public Prescription createCode(Long medecinId, List<String> medicaments) {
-        Doctor doctor = doctorRepository.findById(medecinId).orElseThrow();
+    public PrescriptionEntity createCode(Long medecinId, List<String> medicaments, Long patientId ) {
+        DoctorEntity doctorEntity = doctorRepository.findById(medecinId).orElseThrow();
+        PatientEntity patient = patientRepository.findById(patientId).orElseThrow();
         String code = generateRandomCode(30);
-        Prescription prescription = new Prescription(code, doctor, medicaments);
-        return prescriptionRepository.save(prescription);
+        PrescriptionEntity prescriptionEntity = new PrescriptionEntity(code, doctorEntity, medicaments, patient);
+        return prescriptionRepository.save(prescriptionEntity);
     }
 
 }
