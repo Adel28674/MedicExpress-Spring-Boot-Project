@@ -13,11 +13,11 @@ public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    public List<DoctorEntity> getAllMedecins() {
+    public List<DoctorEntity> getAllDoctors() {
         return doctorRepository.findAll();
     }
 
-    public DoctorEntity getMedecinById(Long id) {
+    public DoctorEntity getDoctorById(Long id) {
         return doctorRepository.findById(id).orElse(null);
     }
 

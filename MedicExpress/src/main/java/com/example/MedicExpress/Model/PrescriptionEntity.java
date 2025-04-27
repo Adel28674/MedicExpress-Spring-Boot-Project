@@ -1,5 +1,6 @@
 package com.example.MedicExpress.Model;
 
+
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -9,37 +10,26 @@ import java.util.List;
 
 @Setter
 @Getter
-
 @Entity
-//@Table(name = "users")
+@Table(name = "prescription")
 public class PrescriptionEntity {
 
     @Id
-//    @Column(name = "id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id")
+    @Column(name = "code")
     private String code;
 
     @ManyToOne
-//  @Column(name = "id")
+    @JoinColumn(name = "doctor") // colonne doctor en prescription = clé étrangère vers doctor.id
     private DoctorEntity doctorEntity;
 
-    @ElementCollection
-//    @Column(name = "id")
-    private List<String> medicaments;
+    @Column(name = "medicament")
+    private String medicaments;
 
-//    @Column(name = "id")
-    private PatientEntity patient;
-
-    public PrescriptionEntity(String code, DoctorEntity doctorEntity, List<String> medicaments, PatientEntity patient){
-
-        this.code = code;
-        this.doctorEntity = doctorEntity;
-        this.medicaments = medicaments;
-        this.patient = patient;
-
-    }
+    @Column(name = "patient")
+    private String patient;
 
 }
