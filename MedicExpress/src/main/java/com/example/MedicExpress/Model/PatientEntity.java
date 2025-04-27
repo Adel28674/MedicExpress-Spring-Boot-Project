@@ -25,13 +25,17 @@ public class PatientEntity {
     private Date dateBirth;
 
 //    @Column(name = "id")
-    private String bankCard;
+//    private BankCardEntity bankCard;
 
     //    @Column(name = "id")
-    private String vitalCard;
+//    private VitalCardEntity vitalCard;
 
     //    @Column(name = "id")
     private List<PrescriptionEntity> prescriptionEntity;
+
+    public PatientEntity(){
+
+    }
 
 
 }

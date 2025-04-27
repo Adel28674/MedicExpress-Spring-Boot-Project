@@ -1,6 +1,5 @@
 package com.example.MedicExpress.Model;
 
-
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -16,6 +15,7 @@ import java.util.List;
 public class PrescriptionEntity {
 
     @Id
+//    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -23,14 +23,14 @@ public class PrescriptionEntity {
     private String code;
 
     @ManyToOne
-    @Column(name = "id")
+//  @Column(name = "id")
     private DoctorEntity doctorEntity;
 
     @ElementCollection
-    @Column(name = "id")
+//    @Column(name = "id")
     private List<String> medicaments;
 
-    @Column(name = "id")
+//    @Column(name = "id")
     private PatientEntity patient;
 
     public PrescriptionEntity(String code, DoctorEntity doctorEntity, List<String> medicaments, PatientEntity patient){
