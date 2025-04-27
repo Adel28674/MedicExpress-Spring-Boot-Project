@@ -4,23 +4,35 @@ import com.example.MedicExpress.Exception.UserAlreadyExistException;
 import com.example.MedicExpress.Exception.UserDoesNotExistException;
 import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.Repository.UserRepository;
+import com.example.MedicExpress.Utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private final UserRepository userRepository;
 
     @Autowired
     private final BCryptPasswordEncoder bc ;
 
+    @Autowired
+    private final JwtUtils jwtUtil;
+
+    public String cryptPassword(String password){
+        return bc.encode(password);
+    }
 
     public UserEntity getUserById(Long userId){
         return userRepository.findById(userId).orElseThrow(()->new UserDoesNotExistException(userId));
@@ -61,15 +73,21 @@ public class UserService {
         Optional<UserEntity> userOptional = userRepository.findByEmail(username);
 
         if (userOptional.isPresent() && userOptional.get().getPassword().equals(password)) {
-//            return jwtUtil.generateToken(userOptional.get());
-            return null;
+            return jwtUtil.generateToken(userOptional.get().getEmail());
         } else {
             throw new RuntimeException("Invalid credentials");
         }
     }
 
-    public String cryptPassword(String password){
-        return bc.encode(password);
-    }
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
+        );
+    }
 }

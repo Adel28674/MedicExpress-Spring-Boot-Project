@@ -1,44 +1,49 @@
 package com.example.MedicExpress.Utils;
 
+import com.example.MedicExpress.Service.UserService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 public class JwtUtils {
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
 
-    @Value("${security.jwt.expiration-time}")
-    private long jwtExpiration;
-
-
-
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 864_000_00)) // 1 jour
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 864_000_00))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-//    public String extractEmail(String token) {
-//        return Jwts.parser().setSigningKey(secretKey)
-//                .parseClaimsJws(token)
-//                .getBody().getSubject();
-//    }
+    public String extractEmail(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload().getSubject();
+    }
 
-//    public boolean isTokenValid(String token, String username) {
-//        return extractEmail(token).equals(username);
-//    }
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        String email = extractEmail(token);
+        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
 
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private boolean isTokenExpired(String token) {
+        return Jwts.parser()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration()
+                .before(new Date());
+    }
+
+    private SecretKey getSigningKey() {
+        return Jwts.SIG.HS256.key().build();
     }
 }
