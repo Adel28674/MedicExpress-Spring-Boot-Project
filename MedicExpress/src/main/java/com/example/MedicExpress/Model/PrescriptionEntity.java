@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "prescription")
+@Table(name = "prescriptions")
 public class PrescriptionEntity {
 
     @Id
@@ -30,6 +30,6 @@ public class PrescriptionEntity {
     private String medicaments;
 
     @Column(name = "patient")
-    private String patient;
+    private int patient;
 
 }
