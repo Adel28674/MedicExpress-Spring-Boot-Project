@@ -4,19 +4,23 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Entity
 @Setter
 @Getter
-@Table(name = "doctors")
-public class DoctorEntity {
-
+@Table(name = "pharmacy")
+public class PharmacyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "rpps")
-    private String rpps;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "address")
+    private String address;
 
 }
