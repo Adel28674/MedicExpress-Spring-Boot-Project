@@ -8,6 +8,7 @@ import com.example.MedicExpress.Utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,13 +47,6 @@ public class UserService implements UserDetailsService {
         userRepository.saveAll(listUsers);
     }
 
-    public UserEntity register(UserEntity user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new UserAlreadyExistException(user.getEmail());
-        }
-        return userRepository.save(user);
-    }
-
     public void deleteUserById(Long userId){
         userRepository.deleteById(userId);
     }
@@ -67,16 +61,6 @@ public class UserService implements UserDetailsService {
 
     public void deleteAll(){
         userRepository.deleteAll();
-    }
-
-    public String authentificate(String username, String password) {
-        Optional<UserEntity> userOptional = userRepository.findByEmail(username);
-
-        if (userOptional.isPresent() && userOptional.get().getPassword().equals(password)) {
-            return jwtUtil.generateToken(userOptional.get().getEmail());
-        } else {
-            throw new RuntimeException("Invalid credentials");
-        }
     }
 
     @Override
