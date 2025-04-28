@@ -28,4 +28,9 @@ public class OrderController {
                                    @RequestParam String status) {
         return orderService.createOrder(treatmentId, status);
     }
+
+    @PutMapping("/updateStatus/{orderId}")
+    public OrderEntity updateOrderStatus(@PathVariable Long orderId) {
+        return orderService.updateOrderStatus(orderId);
+    }
 }
