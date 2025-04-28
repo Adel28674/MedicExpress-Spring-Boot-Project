@@ -3,6 +3,7 @@ package com.example.MedicExpress.Controller;
 import com.example.MedicExpress.Exception.UserAlreadyExistException;
 import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.SerializationClass.AuthRequest;
+import com.example.MedicExpress.SerializationClass.UserUpdateRequest;
 import com.example.MedicExpress.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,12 @@ public class UserController {
         });
         userService.addUsers(usersEntity);
         return ResponseEntity.ok("the users have been added");
+    }
+
+    @PostMapping("/updateUser")
+    public ResponseEntity<String> updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
+        userService.updateUser(userUpdateRequest);
+        return ResponseEntity.ok(userUpdateRequest.getEmail() + "'s informations have been updated");
     }
 
     @DeleteMapping("/deleteUser/{userId}")

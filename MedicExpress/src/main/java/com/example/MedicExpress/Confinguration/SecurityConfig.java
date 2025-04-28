@@ -1,4 +1,4 @@
-package com.example.MedicExpress.Security;
+package com.example.MedicExpress.Confinguration;
 
 import com.example.MedicExpress.Service.UserService;
 import com.example.MedicExpress.Utils.JwtAuthFilter;
