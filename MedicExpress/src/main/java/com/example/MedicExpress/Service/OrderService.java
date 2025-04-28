@@ -2,12 +2,20 @@ package com.example.MedicExpress.Service;
 
 import com.example.MedicExpress.Model.*;
 import com.example.MedicExpress.Repository.*;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 
 @Service
@@ -73,5 +81,27 @@ public class OrderService {
 
         // Sauvegarder la commande mise à jour
         return orderRepository.save(order);
+    }
+
+    public String generateOrderQRCode(Long orderId) {
+        try {
+            // Créer le contenu du QRCode (vous pouvez mettre ce que vous voulez)
+            String qrContent = "Order ID: " + orderId;
+
+            // Générer le QRCode
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix bitMatrix = qrCodeWriter.encode(qrContent, BarcodeFormat.QR_CODE, 250, 250);
+
+            // Convertir en image
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+
+            // Encoder en Base64 pour envoyer facilement en JSON
+            byte[] qrImageBytes = outputStream.toByteArray();
+            return Base64.getEncoder().encodeToString(qrImageBytes);
+
+        } catch (WriterException | IOException e) {
+            throw new RuntimeException("Could not generate QR Code", e);
+        }
     }
 }

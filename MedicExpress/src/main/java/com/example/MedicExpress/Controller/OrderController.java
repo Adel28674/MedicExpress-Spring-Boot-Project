@@ -33,4 +33,9 @@ public class OrderController {
     public OrderEntity updateOrderStatus(@PathVariable Long orderId) {
         return orderService.updateOrderStatus(orderId);
     }
+
+    @GetMapping("/generateQRCode/{orderId}")
+    public String generateQRCode(@PathVariable Long orderId) {
+        return orderService.generateOrderQRCode(orderId);
+    }
 }
