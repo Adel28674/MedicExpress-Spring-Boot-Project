@@ -3,6 +3,8 @@ package com.example.MedicExpress.Utils;
 import com.example.MedicExpress.Service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +12,9 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 public class JwtUtils {
+
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     public String generateToken(String email) {
         return Jwts.builder()
@@ -44,6 +49,7 @@ public class JwtUtils {
     }
 
     private SecretKey getSigningKey() {
-        return Jwts.SIG.HS256.key().build();
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
