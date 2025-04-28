@@ -35,17 +35,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@RequestBody UserEntity userEntity){
-        userEntity.setPassword(userService.cryptPassword(userEntity.getPassword()));
-        try{
-            userService.register(userEntity);
-        }catch (RuntimeException e){
-            throw new UserAlreadyExistException(userEntity.getEmail());
-        }
-        return ResponseEntity.ok("the user " + userEntity.getEmail() + " have been added");
-    }
-
     @PostMapping("/addUsers")
     public ResponseEntity<String> addUsers(@RequestBody List<UserEntity> usersEntity){
         usersEntity.forEach(userEntity -> {
@@ -79,15 +68,5 @@ public class UserController {
         userService.deleteAll();
         return ResponseEntity.ok("");
     }
-
-    @PostMapping("/authentification")
-    public ResponseEntity<String> authentification(@RequestBody AuthRequest authRequest){
-        return ResponseEntity.ok(userService.authentificate(authRequest.getEmail(), authRequest.getPassword()));
-    }
-
-//    @PostMapping("/getUsernameFromToken/{token}")
-//    public ResponseEntity<String> getUsernameFromToken(@PathVariable String token){
-//        return ResponseEntity.ok(userService.getUsernameFromToken(token));
-//    }
 
 }
