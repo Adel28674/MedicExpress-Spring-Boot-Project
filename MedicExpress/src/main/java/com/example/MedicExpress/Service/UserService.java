@@ -4,8 +4,10 @@ import com.example.MedicExpress.Exception.UserAlreadyExistException;
 import com.example.MedicExpress.Exception.UserDoesNotExistException;
 import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.Repository.UserRepository;
+import com.example.MedicExpress.SerializationClass.UserUpdateRequest;
 import com.example.MedicExpress.Utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +32,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private final JwtUtils jwtUtil;
+
+    @Autowired
+    private final ModelMapper modelMapper;
 
     public String cryptPassword(String password){
         return bc.encode(password);
@@ -73,5 +78,14 @@ public class UserService implements UserDetailsService {
                 user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
         );
+    }
+
+    public void updateUser(UserUpdateRequest userUpdateRequest) {
+        UserEntity user = userRepository.findByEmail(userUpdateRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        modelMapper.map(userUpdateRequest, user);
+
+        userRepository.save(user);
     }
 }
