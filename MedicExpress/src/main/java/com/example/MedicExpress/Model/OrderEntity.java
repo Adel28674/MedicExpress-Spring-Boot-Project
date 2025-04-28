@@ -22,6 +22,8 @@ public class OrderEntity {
     @Column(name = "treatment_id")
     private String treatment_id;
 
+    @Column(name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "prescription", referencedColumnName = "id")

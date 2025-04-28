@@ -9,7 +9,7 @@ import java.sql.Date;
 @Entity
 @Setter
 @Getter
-@Table(name = "patient")
+@Table(name = "patients")
 public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class PatientEntity {
     @Column(name = "sex")
     private String sex;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "address")
+    private String address;
 
 }
