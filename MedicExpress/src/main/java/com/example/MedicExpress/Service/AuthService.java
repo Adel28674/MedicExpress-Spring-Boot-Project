@@ -4,6 +4,7 @@ import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.Repository.UserRepository;
 import com.example.MedicExpress.SerializationClass.SignUpRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,9 @@ public class AuthService implements UserDetailsService {
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder ;
 
+    @Autowired
+    private final ModelMapper modelMapper;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(email)
@@ -41,6 +45,13 @@ public class AuthService implements UserDetailsService {
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRole(signupRequest.getRole());
+
+        return userRepository.save(user);
+    }
+
+    public UserEntity saveUser1(SignUpRequest signupRequest) {
+        UserEntity user = new UserEntity();
+        modelMapper.map(signupRequest, user);
 
         return userRepository.save(user);
     }

@@ -4,6 +4,7 @@ import com.example.MedicExpress.Exception.UserAlreadyExistException;
 import com.example.MedicExpress.Exception.UserDoesNotExistException;
 import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.Repository.UserRepository;
+import com.example.MedicExpress.SerializationClass.ModifyPasswordRequest;
 import com.example.MedicExpress.SerializationClass.UserUpdateRequest;
 import com.example.MedicExpress.Utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -87,5 +88,14 @@ public class UserService implements UserDetailsService {
         modelMapper.map(userUpdateRequest, user);
 
         userRepository.save(user);
+    }
+
+
+    public void updatePassword(ModifyPasswordRequest modifyPasswordRequest){
+        UserEntity user = userRepository.findByEmail(modifyPasswordRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+
+
     }
 }
