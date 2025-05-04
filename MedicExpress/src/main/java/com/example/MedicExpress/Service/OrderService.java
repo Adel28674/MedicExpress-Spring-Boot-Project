@@ -34,20 +34,22 @@ public class OrderService {
     @Autowired
     private PrescriptionRepository prescriptionRepository;
 
-    public OrderEntity createOrder(String treatmentId, String status) {
-        DeliveryDriverEntity deliveryDriver = deliveryDriverRepository.findById(1L)
+    public OrderEntity createOrder(CreateOrderRequest request) {
+        DeliveryDriverEntity deliveryDriver = deliveryDriverRepository.findById(request.getDeliveryDriverId())
                 .orElseThrow(() -> new RuntimeException("Delivery Driver not found"));
-        PharmacyEntity pharmacy = pharmacyRepository.findById(1L)
+
+        PharmacyEntity pharmacy = pharmacyRepository.findById(request.getPharmacyId())
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
-        PatientEntity patient = patientRepository.findById(1L)
+
+        PatientEntity patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
-        PrescriptionEntity prescription = prescriptionRepository.findById(1L)
+
+        PrescriptionEntity prescription = prescriptionRepository.findById(request.getPrescriptionId())
                 .orElseThrow(() -> new RuntimeException("Prescription not found"));
 
         OrderEntity order = new OrderEntity();
         order.setDate(new java.sql.Date(System.currentTimeMillis()));
-        order.setTreatment_id(treatmentId);
-        order.setStatus(status);
+        order.setStatus("Pending");
         order.setDeliveryDriver(deliveryDriver);
         order.setPharmacy(pharmacy);
         order.setPatient(patient);
@@ -55,6 +57,7 @@ public class OrderService {
 
         return orderRepository.save(order);
     }
+
 
     //protéger et sécuriser une série d'opérations qui touchent la base de données
     @Transactional

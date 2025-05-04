@@ -19,9 +19,6 @@ public class OrderEntity {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "treatment_id")
-    private String treatment_id;
-
     @Column(name = "status")
     private String status;
 
