@@ -29,13 +29,10 @@ public class OrderController {
     }
 
 
-    @PutMapping("/updateStatus/{orderId}")
-    public OrderEntity updateOrderStatus(@PathVariable Long orderId) {
-        return orderService.updateOrderStatus(orderId);
+    @PutMapping("/updateStatus")
+    public OrderEntity updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
+        return orderService.updateOrderStatus(request.getOrderId());
     }
 
-    @GetMapping("/generateQRCode/{orderId}")
-    public String generateQRCode(@PathVariable Long orderId) {
-        return orderService.generateOrderQRCode(orderId);
-    }
+
 }

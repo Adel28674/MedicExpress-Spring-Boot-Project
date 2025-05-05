@@ -55,6 +55,14 @@ public class OrderService {
         order.setPatient(patient);
         order.setPrescription(prescription);
 
+        try {
+            String qrText = "Commande ID: " + System.currentTimeMillis(); // ou tout autre identifiant unique
+            String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
+            order.setQrcode(qrCodeBase64);
+        } catch (WriterException | IOException e) {
+            throw new RuntimeException("Erreur lors de la génération du QR code", e);
+        }
+
         return orderRepository.save(order);
     }
 
@@ -84,25 +92,5 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public String generateOrderQRCode(Long orderId) {
-        try {
-            // Créer le contenu du QRCode (vous pouvez mettre ce que vous voulez)
-            String qrContent = "Order ID: " + orderId;
 
-            // Générer le QRCode
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            BitMatrix bitMatrix = qrCodeWriter.encode(qrContent, BarcodeFormat.QR_CODE, 250, 250);
-
-            // Convertir en image
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-
-            // Encoder en Base64 pour envoyer facilement en JSON
-            byte[] qrImageBytes = outputStream.toByteArray();
-            return Base64.getEncoder().encodeToString(qrImageBytes);
-
-        } catch (WriterException | IOException e) {
-            throw new RuntimeException("Could not generate QR Code", e);
-        }
-    }
 }

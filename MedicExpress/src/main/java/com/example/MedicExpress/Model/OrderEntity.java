@@ -22,6 +22,9 @@ public class OrderEntity {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "qrcode", columnDefinition = "TEXT")
+    private String qrcode;
+
     @ManyToOne
     @JoinColumn(name = "prescription", referencedColumnName = "id")
     private PrescriptionEntity prescription;
