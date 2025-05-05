@@ -24,18 +24,15 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/createOrder")
-    public OrderEntity createOrder(@RequestParam String treatmentId,
-                                   @RequestParam String status) {
-        return orderService.createOrder(treatmentId, status);
+    public OrderEntity createOrder(@RequestBody CreateOrderRequest request) {
+        return orderService.createOrder(request);
     }
 
-    @PutMapping("/updateStatus/{orderId}")
-    public OrderEntity updateOrderStatus(@PathVariable Long orderId) {
-        return orderService.updateOrderStatus(orderId);
+
+    @PutMapping("/updateStatus")
+    public OrderEntity updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
+        return orderService.updateOrderStatus(request.getOrderId());
     }
 
-    @GetMapping("/generateQRCode/{orderId}")
-    public String generateQRCode(@PathVariable Long orderId) {
-        return orderService.generateOrderQRCode(orderId);
-    }
+
 }

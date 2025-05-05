@@ -1,6 +1,5 @@
 package com.example.MedicExpress.Controller;
 
-import com.example.MedicExpress.Exception.PrescriptionAlreadyExistException;
 import com.example.MedicExpress.Model.PrescriptionEntity;
 import com.example.MedicExpress.Service.PrescriptionService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +20,9 @@ public class PrescriptionController {
 
     @PostMapping("/addPrescription")
     public ResponseEntity<String> addPrescription(@RequestBody PrescriptionEntity prescriptionEntity) {
-        try {
-            prescriptionService.create(prescriptionEntity);
-        } catch (RuntimeException e) {
-            throw new PrescriptionAlreadyExistException(prescriptionEntity.getCode());
-        }
+
+        prescriptionService.create(prescriptionEntity);
+
         return ResponseEntity.ok( " ----------------- " + prescriptionEntity.getPatient() + " ----------------- ");
     }
 }

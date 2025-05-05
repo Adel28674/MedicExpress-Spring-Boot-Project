@@ -18,9 +18,6 @@ public class PrescriptionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code")
-    private String code;
-
     @ManyToOne
     @JoinColumn(name = "doctor") // colonne doctor en prescription = clé étrangère vers doctor.id
     private DoctorEntity doctorEntity;

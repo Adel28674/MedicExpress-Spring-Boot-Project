@@ -19,11 +19,11 @@ public class OrderEntity {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "treatment_id")
-    private String treatment_id;
-
     @Column(name = "status")
     private String status;
+
+    @Column(name = "qrcode", columnDefinition = "TEXT")
+    private String qrcode;
 
     @ManyToOne
     @JoinColumn(name = "prescription", referencedColumnName = "id")

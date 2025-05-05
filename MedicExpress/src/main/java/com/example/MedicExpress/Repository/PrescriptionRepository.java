@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface PrescriptionRepository extends JpaRepository<PrescriptionEntity, Long> {
-    Optional<PrescriptionEntity> findByCode(String code);
+    Optional<PrescriptionEntity> findById(Long id);
 }
