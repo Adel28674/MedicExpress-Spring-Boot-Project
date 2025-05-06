@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 
 @Setter
 @Getter
@@ -22,8 +24,13 @@ public class PrescriptionEntity {
     @JoinColumn(name = "doctor") // colonne doctor en prescription = clé étrangère vers doctor.id
     private DoctorEntity doctorEntity;
 
-    @Column(name = "medicament")
-    private String medicaments;
+    @ManyToMany
+    @JoinTable(
+            name = "prescription_medicament",
+            joinColumns = @JoinColumn(name = "prescription_id"),
+            inverseJoinColumns = @JoinColumn(name = "medicament_id")
+    )
+    private Set<MedicamentEntity> medicaments;
 
     @Column(name = "patient")
     private int patient;
