@@ -35,36 +35,45 @@ public class OrderService {
     private PrescriptionRepository prescriptionRepository;
 
     public OrderEntity createOrder(CreateOrderRequest request) {
-        DeliveryDriverEntity deliveryDriver = deliveryDriverRepository.findById(request.getDeliveryDriverId())
-                .orElseThrow(() -> new RuntimeException("Delivery Driver not found"));
 
-        PharmacyEntity pharmacy = pharmacyRepository.findById(request.getPharmacyId())
-                .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
+        if (!deliveryDriverRepository.existsById(request.getDeliveryDriverId())) {
+            throw new RuntimeException("Livreur introuvable.");
+        }
 
-        PatientEntity patient = patientRepository.findById(request.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        if (!pharmacyRepository.existsById(request.getPharmacyId())) {
+            throw new RuntimeException("Pharmacie introuvable.");
+        }
 
-        PrescriptionEntity prescription = prescriptionRepository.findById(request.getPrescriptionId())
-                .orElseThrow(() -> new RuntimeException("Prescription not found"));
+        if (!patientRepository.existsById(request.getPatientId())) {
+            throw new RuntimeException("Patient introuvable.");
+        }
 
+        if (!prescriptionRepository.existsById(request.getPrescriptionId())) {
+            throw new RuntimeException("Ordonnance introuvable.");
+        }
+
+        // Création d'une commande avec les entités récupérées simplement
         OrderEntity order = new OrderEntity();
         order.setDate(new java.sql.Date(System.currentTimeMillis()));
         order.setStatus("Pending");
-        order.setDeliveryDriver(deliveryDriver);
-        order.setPharmacy(pharmacy);
-        order.setPatient(patient);
-        order.setPrescription(prescription);
 
+        order.setDeliveryDriver(deliveryDriverRepository.findById(request.getDeliveryDriverId()).get());
+        order.setPharmacy(pharmacyRepository.findById(request.getPharmacyId()).get());
+        order.setPatient(patientRepository.findById(request.getPatientId()).get());
+        order.setPrescription(prescriptionRepository.findById(request.getPrescriptionId()).get());
+
+        // Optionnel : QR code
         try {
-            String qrText = "Commande ID: " + System.currentTimeMillis(); // ou tout autre identifiant unique
+            String qrText = "Commande ID: " + System.currentTimeMillis();
             String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
             order.setQrcode(qrCodeBase64);
-        } catch (WriterException | IOException e) {
-            throw new RuntimeException("Erreur lors de la génération du QR code", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur QR code");
         }
 
         return orderRepository.save(order);
     }
+
 
 
     //protéger et sécuriser une série d'opérations qui touchent la base de données
