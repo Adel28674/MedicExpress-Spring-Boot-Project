@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Setter
 @Getter
@@ -22,10 +25,11 @@ public class PrescriptionEntity {
     @JoinColumn(name = "doctor") // colonne doctor en prescription = clé étrangère vers doctor.id
     private DoctorEntity doctorEntity;
 
-    @Column(name = "medicament")
-    private String medicaments;
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicamentEntity> medicaments = new ArrayList<>();
+
 
     @Column(name = "patient")
-    private int patient;
+    private Long patient;
 
 }
