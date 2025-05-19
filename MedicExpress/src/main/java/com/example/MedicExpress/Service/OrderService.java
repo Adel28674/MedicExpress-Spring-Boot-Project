@@ -83,6 +83,7 @@ public class OrderService {
 
 
     //protéger et sécuriser une série d'opérations qui touchent la base de données
+
     @Transactional
     public OrderEntity updateOrderStatus(Long orderId) {
         // Récupérer la commande
@@ -101,7 +102,6 @@ public class OrderService {
             throw new RuntimeException("Invalid status transition for order id: " + orderId);
         }
 
-
         // code aleatoire
         int randomCode = (int)(Math.random() * 900000) + 100000; // entre 100000 et 999999
         order.setCode(String.valueOf(randomCode));
@@ -110,6 +110,7 @@ public class OrderService {
 
 
         // Sauvegarder la commande mise à jour
+
         return orderRepository.save(order);
     }
 
