@@ -94,14 +94,20 @@ public class OrderService {
 
         // Logique de changement de statut
         if (currentStatus.equalsIgnoreCase("PENDING")) {
-            order.setStatus("READY_FOR_PICKUP");
-        } else if (currentStatus.equalsIgnoreCase("READY_FOR_PICKUP")) {
             order.setStatus("IN_DELIVERY");
         } else if (currentStatus.equalsIgnoreCase("IN_DELIVERY")) {
             order.setStatus("DELIVERED");
         } else {
             throw new RuntimeException("Invalid status transition for order id: " + orderId);
         }
+
+
+        // code aleatoire
+        int randomCode = (int)(Math.random() * 900000) + 100000; // entre 100000 et 999999
+        order.setCode(String.valueOf(randomCode));
+
+        order = orderRepository.save(order); // Sauvegarde avant génération du QR
+
 
         // Sauvegarder la commande mise à jour
         return orderRepository.save(order);
