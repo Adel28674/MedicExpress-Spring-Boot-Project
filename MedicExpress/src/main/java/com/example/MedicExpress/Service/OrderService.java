@@ -67,7 +67,6 @@ public class OrderService {
     }
 
 
-    //protéger et sécuriser une série d'opérations qui touchent la base de données
     @Transactional
     public OrderEntity updateOrderStatus(Long orderId) {
         // Récupérer la commande
@@ -88,7 +87,6 @@ public class OrderService {
             throw new RuntimeException("Invalid status transition for order id: " + orderId);
         }
 
-        // Sauvegarder la commande mise à jour
         return orderRepository.save(order);
     }
 
