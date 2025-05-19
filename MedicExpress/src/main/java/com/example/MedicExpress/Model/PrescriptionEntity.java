@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Setter
 @Getter
 @Entity
@@ -18,10 +22,11 @@ public class PrescriptionEntity {
     @JoinColumn(name = "doctor")
     private DoctorEntity doctorEntity;
 
-    @Column(name = "medicament")
-    private String medicaments;
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicamentEntity> medicaments = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "patient")
-    private UserEntity patient;
+    @Column(name = "patient")
+    private Long patient;
+
 }
+

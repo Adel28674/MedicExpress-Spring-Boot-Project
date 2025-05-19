@@ -19,10 +19,13 @@ public class PrescriptionController {
     private PrescriptionService prescriptionService;
 
     @PostMapping("/addPrescription")
-    public ResponseEntity<String> addPrescription(@RequestBody PrescriptionEntity prescriptionEntity) {
-
-        prescriptionService.create(prescriptionEntity);
-
-        return ResponseEntity.ok( " ----------------- " + prescriptionEntity.getPatient() + " ----------------- ");
+    public ResponseEntity<?> addPrescription(@RequestBody PrescriptionEntity prescriptionEntity) {
+        try {
+            prescriptionService.create(prescriptionEntity);
+            return ResponseEntity.ok("Ordonnance créée pour le patient ID : " + prescriptionEntity.getPatient());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());
+        }
     }
+
 }
