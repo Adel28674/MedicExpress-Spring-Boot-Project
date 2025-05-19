@@ -62,16 +62,22 @@ public class OrderService {
         order.setPatient(patientRepository.findById(request.getPatientId()).get());
         order.setPrescription(prescriptionRepository.findById(request.getPrescriptionId()).get());
 
-        // Optionnel : QR code
+        // code aleatoire
+        int randomCode = (int)(Math.random() * 900000) + 100000; // entre 100000 et 999999
+        order.setCode(String.valueOf(randomCode));
+
+        order = orderRepository.save(order); // Sauvegarde avant génération du QR
+
         try {
-            String qrText = "Commande ID: " + System.currentTimeMillis();
+            String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
             String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
             order.setQrcode(qrCodeBase64);
+            return orderRepository.save(order); // mise à jour avec le QR
         } catch (Exception e) {
             throw new RuntimeException("Erreur QR code");
         }
 
-        return orderRepository.save(order);
+
     }
 
 

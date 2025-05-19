@@ -22,6 +22,9 @@ public class OrderEntity {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "code")
+    private String code;
+
     @Column(name = "qrcode", columnDefinition = "TEXT")
     private String qrcode;
 

@@ -8,10 +8,13 @@ import com.example.MedicExpress.Service.OrderService;
 import com.example.MedicExpress.Service.PrescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -19,6 +22,9 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class OrderController {
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private OrderService orderService;
@@ -33,6 +39,26 @@ public class OrderController {
     public OrderEntity updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
         return orderService.updateOrderStatus(request.getOrderId());
     }
+
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestParam Long orderId, @RequestParam String code) {
+        Optional<OrderEntity> orderOpt = orderRepository.findById(orderId);
+        if (orderOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande introuvable");
+        }
+
+        OrderEntity order = orderOpt.get();
+
+        if (!order.getCode().equals(code)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Code invalide");
+        }
+
+        orderService.updateOrderStatus(orderId); // ou passez l'objet directement
+        return ResponseEntity.ok("Commande validée !");
+    }
+
+
 
 
 }
