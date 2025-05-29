@@ -27,7 +27,7 @@ public class PatientService {
     private OrderRepository orderRepository;
 
     public List<PrescriptionEntity> getPrescriptionsForPatient(Long patientId) {
-        return prescriptionRepository.findByPatientId(patientId);
+        return prescriptionRepository.findByPatient_Id(patientId);
     }
 
     public List<OrderEntity> getOrdersForPatient(Long patientId) {

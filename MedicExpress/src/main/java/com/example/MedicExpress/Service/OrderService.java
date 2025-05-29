@@ -55,7 +55,7 @@ public class OrderService {
         // Création d'une commande avec les entités récupérées simplement
         OrderEntity order = new OrderEntity();
         order.setDate(new java.sql.Date(System.currentTimeMillis()));
-        order.setStatus("Pending");
+        order.setStatus("WAITING_FOR_DRIVER");
 
         order.setDeliveryDriver(deliveryDriverRepository.findById(request.getDeliveryDriverId()).get());
         order.setPharmacy(pharmacyRepository.findById(request.getPharmacyId()).get());
@@ -94,7 +94,9 @@ public class OrderService {
         String currentStatus = order.getStatus();
 
         // Logique de changement de statut
-        if (currentStatus.equalsIgnoreCase("PENDING")) {
+        if (currentStatus.equalsIgnoreCase("WAITING_FOR_DRIVER")) {
+            order.setStatus("PENDING");
+        }else if (currentStatus.equalsIgnoreCase("PENDING")) {
             order.setStatus("IN_DELIVERY");
         } else if (currentStatus.equalsIgnoreCase("IN_DELIVERY")) {
             order.setStatus("DELIVERED");

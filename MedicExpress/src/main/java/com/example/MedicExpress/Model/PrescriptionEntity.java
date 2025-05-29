@@ -25,8 +25,8 @@ public class PrescriptionEntity {
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicamentEntity> medicaments = new ArrayList<>();
 
-    @Column(name = "patient")
-    private Long patient;
-
+    @ManyToOne
+    @JoinColumn(name = "patient")
+    private PatientEntity patient;
 }
 

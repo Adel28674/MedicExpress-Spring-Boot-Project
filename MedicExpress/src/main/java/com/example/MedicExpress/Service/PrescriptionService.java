@@ -3,6 +3,7 @@ package com.example.MedicExpress.Service;
 
 import com.example.MedicExpress.Model.DoctorEntity;
 import com.example.MedicExpress.Model.MedicamentEntity;
+import com.example.MedicExpress.Model.PatientEntity;
 import com.example.MedicExpress.Model.PrescriptionEntity;
 import com.example.MedicExpress.Repository.DoctorRepository;
 import com.example.MedicExpress.Repository.PatientRepository;
@@ -38,10 +39,11 @@ public class PrescriptionService {
         }
 
         // Vérification de l'existence du patient
-        long patientId = prescriptionEntity.getPatient();
-        if (!patientRepository.existsById(patientId)) {
-            throw new IllegalArgumentException("Le patient avec l'id " + patientId + " n'existe pas.");
+        PatientEntity patient = prescriptionEntity.getPatient();
+        if (!patientRepository.existsById(patient.getId())) {
+            throw new IllegalArgumentException("Le patient avec l'id " + patient.getId() + " n'existe pas.");
         }
+
 
         // Lier chaque médicament à la prescription avant la sauvegarde
         for (MedicamentEntity medicament : prescriptionEntity.getMedicaments()) {
