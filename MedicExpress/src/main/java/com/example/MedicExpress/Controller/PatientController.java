@@ -31,10 +31,10 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getPrescriptionsForPatient(patientId));
     }
 
-    @PostMapping("/orders")
+/*    @PostMapping("/orders")
     public ResponseEntity<OrderEntity> placeOrder(@RequestBody CreateOrderRequest request) {
         return ResponseEntity.ok(patientService.createOrder(request));
-    }
+    }*/
 
 
 

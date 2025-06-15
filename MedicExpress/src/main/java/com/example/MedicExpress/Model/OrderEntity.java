@@ -20,7 +20,9 @@ public class OrderEntity {
     private Date date;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
 
     @Column(name = "code")
     private String code;
@@ -43,5 +45,4 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "pharmacy", referencedColumnName = "id")
     private PharmacyEntity pharmacy;
-
 }

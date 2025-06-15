@@ -27,12 +27,59 @@ public class OrderController {
     private OrderRepository orderRepository;
 
     @Autowired
+    private DeliveryDriverRepository deliveryDriverRepository;
+
+    @Autowired
     private OrderService orderService;
 
     @PostMapping("/createOrder")
     public OrderEntity createOrder(@RequestBody CreateOrderRequest request) {
         return orderService.createOrder(request);
     }
+
+    @PostMapping("/{orderId}/accept")
+    public ResponseEntity<?> acceptOrder(@PathVariable Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Commande introuvable"));
+
+        if (order.getStatus() != OrderStatus.PENDING_DRIVER_RESPONSE) {
+            return ResponseEntity.badRequest().body("La commande n'est pas en attente.");
+        }
+
+        order.setStatus(OrderStatus.WAITING_FOR_DRIVER);
+
+        try {
+            String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
+            String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
+            order.setQrcode(qrCodeBase64);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la génération du QR code");
+        }
+
+        return ResponseEntity.ok(orderRepository.save(order));
+    }
+
+    @PostMapping("/{orderId}/refuse")
+    public ResponseEntity<?> refuseOrder(@PathVariable Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Commande introuvable"));
+
+        if (order.getStatus() != OrderStatus.PENDING_DRIVER_RESPONSE) {
+            return ResponseEntity.badRequest().body("La commande n'est pas en attente.");
+        }
+
+        List<DeliveryDriverEntity> drivers = deliveryDriverRepository.findAll();
+        for (DeliveryDriverEntity newDriver : drivers) {
+            if (!newDriver.getId().equals(order.getDeliveryDriver().getId())) {
+                order.setDeliveryDriver(newDriver);
+                order.setStatus(OrderStatus.PENDING_DRIVER_RESPONSE);
+                return ResponseEntity.ok(orderRepository.save(order));
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun autre livreur disponible.");
+    }
+
 
 
     @PutMapping("/updateStatus")
