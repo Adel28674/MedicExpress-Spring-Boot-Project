@@ -1,24 +1,37 @@
 package com.example.MedicExpress.Utils;
 
-import com.example.MedicExpress.Service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtUtils {
 
     @Value("${jwt.secret}")
     private String secretKey;
 
-    public String generateToken(String email) {
+    // e
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("USER");
+
+        claims.put("role", role); // Injecte le rôle dans le token
+
         return Jwts.builder()
-                .subject(email)
+                .claims(claims)
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 864_000_00))
                 .signWith(getSigningKey())
@@ -33,6 +46,16 @@ public class JwtUtils {
                 .getPayload().getSubject();
     }
 
+    // ✅ Méthode optionnelle si tu veux extraire le rôle aussi
+    public String extractRole(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.get("role", String.class);
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String email = extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -40,7 +63,7 @@ public class JwtUtils {
 
     private boolean isTokenExpired(String token) {
         return Jwts.parser()
-                .setSigningKey(getSigningKey())
+                .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()

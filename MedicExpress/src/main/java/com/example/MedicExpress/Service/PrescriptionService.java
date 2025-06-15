@@ -31,23 +31,24 @@ public class PrescriptionService {
             throw new IllegalArgumentException("Une ordonnance doit contenir au moins un médicament.");
         }
 
-        // Vérification de l'existence du docteur
+        // 🔍 Vérification de l'existence du docteur
         Long doctorId = prescriptionEntity.getDoctorEntity().getId();
         if (!doctorRepository.existsById(doctorId)) {
             throw new IllegalArgumentException("Le médecin avec l'id " + doctorId + " n'existe pas.");
         }
 
-        // Vérification de l'existence du patient
-        long patientId = prescriptionEntity.getPatient();
+        // ✅ Correction ici : on récupère l'ID depuis l'objet PatientEntity
+        Long patientId = prescriptionEntity.getPatient().getId();
         if (!patientRepository.existsById(patientId)) {
             throw new IllegalArgumentException("Le patient avec l'id " + patientId + " n'existe pas.");
         }
 
-        // Lier chaque médicament à la prescription avant la sauvegarde
+        // 💊 Lier chaque médicament à la prescription avant la sauvegarde
         for (MedicamentEntity medicament : prescriptionEntity.getMedicaments()) {
             medicament.setPrescription(prescriptionEntity);
         }
 
         return prescriptionRepository.save(prescriptionEntity);
     }
+
 }

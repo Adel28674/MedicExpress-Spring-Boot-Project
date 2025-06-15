@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Setter
 @Getter
 @Entity
@@ -22,11 +21,10 @@ public class PrescriptionEntity {
     @JoinColumn(name = "doctor")
     private DoctorEntity doctorEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "patient")  // Ce champ correspond à la colonne 'patient' en base
+    private PatientEntity patient;
+
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicamentEntity> medicaments = new ArrayList<>();
-
-    @Column(name = "patient")
-    private Long patient;
-
 }
-
