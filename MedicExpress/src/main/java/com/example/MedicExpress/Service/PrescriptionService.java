@@ -28,7 +28,7 @@ public class PrescriptionService {
     private PatientRepository patientRepository;
 
     public PrescriptionEntity create(PrescriptionEntity prescriptionEntity) {
-        if (prescriptionEntity.getMedicaments() == null || prescriptionEntity.getMedicaments().isEmpty()) {
+                if (prescriptionEntity.getMedicaments() == null || prescriptionEntity.getMedicaments().isEmpty()) {
             throw new IllegalArgumentException("Une ordonnance doit contenir au moins un médicament.");
         }
 
@@ -52,4 +52,5 @@ public class PrescriptionService {
 
         return prescriptionRepository.save(prescriptionEntity);
     }
+
 }
