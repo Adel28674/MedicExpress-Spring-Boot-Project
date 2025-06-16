@@ -64,23 +64,24 @@ public class AuthService implements UserDetailsService {
         switch (user.getRole()) {
             case PATIENT -> {
                 PatientEntity patient = new PatientEntity();
-                modelMapper.map(signupRequest, patient);
+                patient.setId(user.getId());
                 patientRepository.save(patient);
             }
             case DOCTOR -> {
                 DoctorEntity doctorEntity = new DoctorEntity();
-                modelMapper.map(signupRequest, doctorEntity);
+                doctorEntity.setId(user.getId());
+                doctorEntity.setRpps(signupRequest.getRpps());
                 doctorRepository.save(doctorEntity);
 
             }
             case DELIVERY_DRIVER -> {
                 DeliveryDriverEntity deliveryDriverEntity = new DeliveryDriverEntity();
-                modelMapper.map(signupRequest, deliveryDriverEntity);
+                deliveryDriverEntity.setId(user.getId());
                 deliveryDriverRepository.save(deliveryDriverEntity);
             }
             case PHARMACIST -> {
                 PharmacyEntity pharmacyEntity = new PharmacyEntity();
-                modelMapper.map(signupRequest, pharmacyEntity);
+                pharmacyEntity.setId(user.getId());
                 pharmacyRepository.save(pharmacyEntity);
             }
             case ADMIN -> {

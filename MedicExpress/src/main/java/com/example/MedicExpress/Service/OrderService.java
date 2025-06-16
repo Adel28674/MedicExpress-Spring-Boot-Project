@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 
 @Service
@@ -33,6 +34,10 @@ public class OrderService {
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
 
     public OrderEntity createOrder(CreateOrderRequest request) {
 
@@ -60,16 +65,25 @@ public class OrderService {
         DeliveryDriverEntity driver = deliveryDriverRepository.findById(request.getDeliveryDriverId())
                 .orElseThrow(() -> new RuntimeException("Livreur introuvable"));
 
-        order.setDeliveryDriver(driver);
-        order.setCode(String.valueOf((int)(Math.random() * 900000) + 100000));
+        try {
+            String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
+            String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
+            order.setQrcode(qrCodeBase64);
+            NotificationEntity notif = new NotificationEntity();
+            notif.setDeliveryDriver(order.getDeliveryDriver());
+            notif.setOrder(order);
+            notif.setMessage("Nouvelle commande disponible");
+            notificationRepository.save(notif);
+            return orderRepository.save(order);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur QR code");
+        }
 
         return orderRepository.save(order);
 
     }
 
 
-
-    //protéger et sécuriser une série d'opérations qui touchent la base de données
 
     @Transactional
     public OrderEntity updateOrderStatus(Long orderId) {
@@ -100,6 +114,7 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-
-
+    public List<NotificationEntity> getNotificationsForDriver(Long driverId) {
+        return notificationRepository.findByDeliveryDriverId(driverId);
+    }
 }

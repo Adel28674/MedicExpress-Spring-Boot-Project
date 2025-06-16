@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
+@Setter
 @Table(name = "medicament")
 public class MedicamentEntity {
 
@@ -15,11 +15,14 @@ public class MedicamentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "nom", nullable = false)
     private String nom;
+
+    @Column(name = "prise_par_jour", nullable = false)
+    private Integer priseParJour = 1;
 
     @ManyToOne
     @JoinColumn(name = "prescription_id", nullable = false)
-    @JsonBackReference  // <-- ajoute cette annotation ici
+    @JsonBackReference
     private PrescriptionEntity prescription;
 }

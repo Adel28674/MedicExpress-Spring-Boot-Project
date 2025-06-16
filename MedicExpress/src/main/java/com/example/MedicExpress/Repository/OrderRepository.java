@@ -16,5 +16,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByPatientId(Long patientId);
     Optional<OrderEntity> findFirstByPrescriptionIdAndStatusNotIn(Long prescriptionId, List<OrderStatus> excludedStatuses);
 
+    List<OrderEntity> findByStatusIgnoreCaseAndPatientId(String status, Long patientId);
+
     List<OrderEntity> findByPrescriptionId(Long prescriptionId);
 }

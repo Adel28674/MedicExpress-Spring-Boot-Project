@@ -34,7 +34,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()) //
                 .authorizeHttpRequests(authz -> authz
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/patient/**").hasRole("PATIENT")
+                        .requestMatchers("/api/deliveryDriver/**").hasRole("DELIVERY_DRIVER")
+                        .requestMatchers("/api/pharmacist/**").hasRole("PHARMACIST")
+                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

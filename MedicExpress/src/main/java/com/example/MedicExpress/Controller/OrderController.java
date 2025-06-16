@@ -107,6 +107,9 @@ public class OrderController {
         return ResponseEntity.ok("Commande validée !");
     }
 
+    public ResponseEntity<List<NotificationEntity>> getNotificationsForDriver(@RequestParam Long driverId) {
+        return ResponseEntity.ok(orderService.getNotificationsForDriver(driverId));
+
     @GetMapping("/by-prescription/{prescriptionId}")
     public ResponseEntity<Map<String, String>> getOrderByPrescription(@PathVariable Long prescriptionId) {
         Optional<OrderEntity> orderOpt = orderRepository.findFirstByPrescriptionIdAndStatusNotIn(
@@ -122,6 +125,7 @@ public class OrderController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
 
