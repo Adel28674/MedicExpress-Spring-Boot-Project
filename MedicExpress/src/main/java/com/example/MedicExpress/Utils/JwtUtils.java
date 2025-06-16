@@ -1,9 +1,13 @@
 package com.example.MedicExpress.Utils;
 
+import com.example.MedicExpress.Model.UserEntity;
+import com.example.MedicExpress.Repository.UserRepository;
+import com.example.MedicExpress.Service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,12 +17,16 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class JwtUtils {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
+    @Autowired
+    private UserRepository userRepository ;
 
     // e
     public String generateToken(UserDetails userDetails) {
@@ -29,8 +37,9 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority)
                 .orElse("USER");
 
-        claims.put("role", role); // Injecte le rôle dans le token
-
+        UserEntity userEntity = userRepository.findByEmail(userDetails.getUsername()).get();
+        claims.put("id", userEntity.getId());
+        claims.put("role", role);
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())

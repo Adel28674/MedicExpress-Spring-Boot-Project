@@ -2,7 +2,9 @@ package com.example.MedicExpress.Repository;
 
 import com.example.MedicExpress.Model.OrderEntity;
 import com.example.MedicExpress.Model.OrderStatus;
+import com.example.MedicExpress.Model.PrescriptionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +19,10 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByStatusAndPatientId(String status, Long patientId);
 
     List<OrderEntity> findByPrescriptionId(Long prescriptionId);
+
+    @Query("SELECT DISTINCT o.prescription FROM OrderEntity o WHERE o.pharmacy.id = :pharmacyId")
+    List<PrescriptionEntity> findPrescriptionsByPharmacyId(Long pharmacyId);
+
+    // 🔍 Donne toutes les commandes pour une pharmacie
+    List<OrderEntity> findByPharmacyId(Long pharmacyId);
 }
