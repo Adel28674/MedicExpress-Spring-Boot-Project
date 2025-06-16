@@ -1,9 +1,6 @@
 package com.example.MedicExpress.Controller;
 
-import com.example.MedicExpress.Model.CreateOrderRequest;
-import com.example.MedicExpress.Model.DoctorEntity;
-import com.example.MedicExpress.Model.OrderEntity;
-import com.example.MedicExpress.Model.PrescriptionEntity;
+import com.example.MedicExpress.Model.*;
 import com.example.MedicExpress.Service.DeliveryDriverService;
 import com.example.MedicExpress.Service.DoctorService;
 
@@ -15,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -31,10 +29,14 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getPrescriptionsForPatient(patientId));
     }
 
-    @PostMapping("/orders")
+
+
+
+
+/*    @PostMapping("/orders")
     public ResponseEntity<OrderEntity> placeOrder(@RequestBody CreateOrderRequest request) {
         return ResponseEntity.ok(patientService.createOrder(request));
-    }
+    }*/
 
 
 

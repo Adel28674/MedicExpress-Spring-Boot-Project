@@ -22,6 +22,10 @@ public class PrescriptionEntity {
     @JoinColumn(name = "doctor")
     private DoctorEntity doctorEntity;
 
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference  // <-- ajoute cette annotation ici
+    private List<MedicamentEntity> medicaments = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "patient")
     private PatientEntity patient;
@@ -29,4 +33,5 @@ public class PrescriptionEntity {
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<MedicamentEntity> medicaments = new ArrayList<>();
+
 }

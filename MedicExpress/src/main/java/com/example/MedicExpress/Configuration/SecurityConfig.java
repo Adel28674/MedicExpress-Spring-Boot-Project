@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/pharmacist/**").hasRole("PHARMACIST")
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider);
 

@@ -1,6 +1,7 @@
 package com.example.MedicExpress.Controller;
 
 import com.example.MedicExpress.Exception.UserAlreadyExistException;
+import com.example.MedicExpress.Model.PatientEntity;
 import com.example.MedicExpress.Model.UserEntity;
 import com.example.MedicExpress.SerializationClass.AuthRequest;
 import com.example.MedicExpress.SerializationClass.UserUpdateRequest;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -75,5 +77,6 @@ public class UserController {
         userService.deleteAll();
         return ResponseEntity.ok("");
     }
+
 
 }

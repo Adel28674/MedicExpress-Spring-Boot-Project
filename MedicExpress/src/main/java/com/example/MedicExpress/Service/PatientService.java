@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -30,14 +31,12 @@ public class PatientService {
     private NotificationRepository notificationRepository;
 
     public List<PrescriptionEntity> getPrescriptionsForPatient(Long patientId) {
-        return prescriptionRepository.findByPatientId(patientId);
+        return prescriptionRepository.findByPatient_Id(patientId);
     }
 
     public List<OrderEntity> getOrdersForPatient(Long patientId) {
         return orderRepository.findByPatientId(patientId);
     }
-
-
 
     public OrderEntity createOrder(CreateOrderRequest request) {
 

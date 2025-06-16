@@ -1,6 +1,7 @@
 package com.example.MedicExpress.Model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,9 +21,4 @@ public class PatientEntity {
 
     @Column(name = "address")
     private String address;
-
-
-
-
-
 }

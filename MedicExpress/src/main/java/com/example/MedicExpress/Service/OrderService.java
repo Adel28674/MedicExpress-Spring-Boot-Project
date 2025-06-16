@@ -44,34 +44,26 @@ public class OrderService {
         if (!deliveryDriverRepository.existsById(request.getDeliveryDriverId())) {
             throw new RuntimeException("Livreur introuvable.");
         }
-
         if (!pharmacyRepository.existsById(request.getPharmacyId())) {
             throw new RuntimeException("Pharmacie introuvable.");
         }
-
         if (!patientRepository.existsById(request.getPatientId())) {
             throw new RuntimeException("Patient introuvable.");
         }
-
         if (!prescriptionRepository.existsById(request.getPrescriptionId())) {
             throw new RuntimeException("Ordonnance introuvable.");
         }
 
-        // Création d'une commande avec les entités récupérées simplement
         OrderEntity order = new OrderEntity();
         order.setDate(new java.sql.Date(System.currentTimeMillis()));
-        order.setStatus("Pending");
+        order.setStatus(OrderStatus.PENDING_DRIVER_RESPONSE);
 
-        order.setDeliveryDriver(deliveryDriverRepository.findById(request.getDeliveryDriverId()).get());
         order.setPharmacy(pharmacyRepository.findById(request.getPharmacyId()).get());
         order.setPatient(patientRepository.findById(request.getPatientId()).get());
         order.setPrescription(prescriptionRepository.findById(request.getPrescriptionId()).get());
 
-        // code aleatoire
-        int randomCode = (int)(Math.random() * 900000) + 100000; // entre 100000 et 999999
-        order.setCode(String.valueOf(randomCode));
-
-        order = orderRepository.save(order); // Sauvegarde avant génération du QR
+        DeliveryDriverEntity driver = deliveryDriverRepository.findById(request.getDeliveryDriverId())
+                .orElseThrow(() -> new RuntimeException("Livreur introuvable"));
 
         try {
             String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
@@ -87,6 +79,7 @@ public class OrderService {
             throw new RuntimeException("Erreur QR code");
         }
 
+        return orderRepository.save(order);
 
     }
 
@@ -98,26 +91,25 @@ public class OrderService {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
 
-        // Lire le statut actuel
-        String currentStatus = order.getStatus();
+        OrderStatus currentStatus = order.getStatus();
 
-        // Logique de changement de statut
-        if (currentStatus.equalsIgnoreCase("PENDING")) {
-            order.setStatus("IN_DELIVERY");
-        } else if (currentStatus.equalsIgnoreCase("IN_DELIVERY")) {
-            order.setStatus("DELIVERED");
-        } else {
-            throw new RuntimeException("Invalid status transition for order id: " + orderId);
+
+        switch (currentStatus) {
+            case PENDING_DRIVER_RESPONSE:
+                order.setStatus(OrderStatus.WAITING_FOR_DRIVER);
+                break;
+            case WAITING_FOR_DRIVER:
+                order.setStatus(OrderStatus.IN_DELIVERY);
+                break;
+            case IN_DELIVERY:
+                order.setStatus(OrderStatus.DELIVERED);
+                break;
+            default:
+                throw new RuntimeException("Invalid status transition for order id: " + orderId);
         }
 
-        // code aleatoire
-        int randomCode = (int)(Math.random() * 900000) + 100000; // entre 100000 et 999999
+        int randomCode = (int) (Math.random() * 900000) + 100000;
         order.setCode(String.valueOf(randomCode));
-
-        order = orderRepository.save(order); // Sauvegarde avant génération du QR
-
-
-        // Sauvegarder la commande mise à jour
 
         return orderRepository.save(order);
     }
