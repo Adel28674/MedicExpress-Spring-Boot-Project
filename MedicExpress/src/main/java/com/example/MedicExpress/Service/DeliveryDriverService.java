@@ -37,7 +37,7 @@ public class DeliveryDriverService {
             return ResponseEntity.badRequest().body("La commande n'est pas en attente.");
         }
 
-        order.setStatus(String.valueOf(OrderStatus.WAITING_FOR_DRIVER));
+        order.setStatus(OrderStatus.WAITING_FOR_DRIVER);
 
         try {
             String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
@@ -63,7 +63,7 @@ public class DeliveryDriverService {
         for (DeliveryDriverEntity newDriver : drivers) {
             if (!newDriver.getId().equals(order.getDeliveryDriver().getId())) {
                 order.setDeliveryDriver(newDriver);
-                order.setStatus(String.valueOf(OrderStatus.PENDING_DRIVER_RESPONSE));
+                order.setStatus(OrderStatus.PENDING_DRIVER_RESPONSE);
                 return ResponseEntity.ok("L'order a été déclinée");
             }
         }

@@ -48,4 +48,5 @@ public class AuthenticationController {
         return ResponseEntity.ok("User registered successfully with email: " + savedUser.getEmail());
     }
 
+
 }

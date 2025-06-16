@@ -19,4 +19,7 @@ public class SignUpRequest {
     private String rpps;
     private String address;
 
+    private String sex;
+
+
 }

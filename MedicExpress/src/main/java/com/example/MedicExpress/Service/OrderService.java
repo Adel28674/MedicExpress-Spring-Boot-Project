@@ -39,7 +39,7 @@ public class OrderService {
     private NotificationRepository notificationRepository;
 
 
-    public OrderEntity createOrder(CreateOrderRequest request) {
+    /*public OrderEntity createOrder(CreateOrderRequest request) {
 
         if (!deliveryDriverRepository.existsById(request.getDeliveryDriverId())) {
             throw new RuntimeException("Livreur introuvable.");
@@ -81,7 +81,7 @@ public class OrderService {
 
         return orderRepository.save(order);
 
-    }
+    }*/
 
 
 

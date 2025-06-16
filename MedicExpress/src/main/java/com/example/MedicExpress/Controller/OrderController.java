@@ -34,11 +34,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/createOrder")
-    public OrderEntity createOrder(@RequestBody CreateOrderRequest request) {
-        return orderService.createOrder(request);
-    }
-
     @PostMapping("/{orderId}/accept")
     public ResponseEntity<?> acceptOrder(@PathVariable Long orderId) {
         OrderEntity order = orderRepository.findById(orderId)
@@ -109,6 +104,7 @@ public class OrderController {
 
     public ResponseEntity<List<NotificationEntity>> getNotificationsForDriver(@RequestParam Long driverId) {
         return ResponseEntity.ok(orderService.getNotificationsForDriver(driverId));
+    }
 
     @GetMapping("/by-prescription/{prescriptionId}")
     public ResponseEntity<Map<String, String>> getOrderByPrescription(@PathVariable Long prescriptionId) {
