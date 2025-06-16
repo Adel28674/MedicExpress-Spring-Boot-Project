@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 
 @Service
@@ -33,6 +34,10 @@ public class OrderService {
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
 
     public OrderEntity createOrder(CreateOrderRequest request) {
 
@@ -72,7 +77,12 @@ public class OrderService {
             String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
             String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
             order.setQrcode(qrCodeBase64);
-            return orderRepository.save(order); // mise à jour avec le QR
+            NotificationEntity notif = new NotificationEntity();
+            notif.setDeliveryDriver(order.getDeliveryDriver());
+            notif.setOrder(order);
+            notif.setMessage("Nouvelle commande disponible");
+            notificationRepository.save(notif);
+            return orderRepository.save(order);
         } catch (Exception e) {
             throw new RuntimeException("Erreur QR code");
         }
@@ -81,8 +91,6 @@ public class OrderService {
     }
 
 
-
-    //protéger et sécuriser une série d'opérations qui touchent la base de données
 
     @Transactional
     public OrderEntity updateOrderStatus(Long orderId) {
@@ -112,6 +120,37 @@ public class OrderService {
         // Sauvegarder la commande mise à jour
 
         return orderRepository.save(order);
+    }
+
+    public List<NotificationEntity> getNotificationsForDriver(Long driverId) {
+        return notificationRepository.findByDeliveryDriverId(driverId);
+    }
+
+    @Transactional
+    public void acceptOrder(Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Commande introuvable"));
+        order.setStatus("IN_DELIVERY");
+        orderRepository.save(order);
+
+        notificationRepository.findAll()
+                .stream()
+                .filter(n -> n.getOrder().getId().equals(orderId))
+                .findFirst()
+                .ifPresent(n -> {
+                    n.setRead(true);
+                    notificationRepository.save(n);
+                });
+    }
+
+    @Transactional
+    public void refuseOrder(Long orderId) {
+        orderRepository.deleteById(orderId);
+
+        notificationRepository.findAll()
+                .stream()
+                .filter(n -> n.getOrder().getId().equals(orderId))
+                .forEach(n -> notificationRepository.deleteById(n.getId()));
     }
 
 

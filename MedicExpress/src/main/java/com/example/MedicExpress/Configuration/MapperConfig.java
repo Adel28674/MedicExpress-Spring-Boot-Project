@@ -1,4 +1,4 @@
-package com.example.MedicExpress.Confinguration;
+package com.example.MedicExpress.Configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

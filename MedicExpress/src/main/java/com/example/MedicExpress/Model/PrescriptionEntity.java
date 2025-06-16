@@ -1,5 +1,6 @@
 package com.example.MedicExpress.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,10 @@ public class PrescriptionEntity {
     private DoctorEntity doctorEntity;
 
     @ManyToOne
-    @JoinColumn(name = "patient")  // Ce champ correspond à la colonne 'patient' en base
+    @JoinColumn(name = "patient")
     private PatientEntity patient;
 
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<MedicamentEntity> medicaments = new ArrayList<>();
 }

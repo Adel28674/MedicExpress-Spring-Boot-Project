@@ -43,6 +43,12 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getOrdersForPatient(patientId));
     }
 
+    @GetMapping("orders/delivered/{patientId}")
+    public ResponseEntity<List<OrderEntity>> getDeliveredOrdersForPatient(@PathVariable Long patientId) {
+        List<OrderEntity> deliveredOrders = patientService.getDeliveredOrdersForPatient(patientId);
+        return ResponseEntity.ok(deliveredOrders);
+    }
+
     // ---- Évaluation du livreur ----
 
 //    @PostMapping("/evaluate")

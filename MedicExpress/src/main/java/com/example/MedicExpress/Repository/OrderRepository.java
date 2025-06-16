@@ -12,4 +12,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<OrderEntity, Long>{
     List<OrderEntity> findByPatientId(Long patientId);
 
+    List<OrderEntity> findByStatusIgnoreCaseAndPatientId(String status, Long patientId);
+
+
 }
