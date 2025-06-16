@@ -63,17 +63,5 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getNotificationsForDriver(driverId));
     }
 
-    @PostMapping("/accept")
-    public ResponseEntity<String> acceptOrder(@RequestParam Long orderId) {
-        orderService.acceptOrder(orderId);
-        return ResponseEntity.ok("Commande acceptée");
-    }
-
-    @PostMapping("/refuse")
-    public ResponseEntity<String> refuseOrder(@RequestParam Long orderId) {
-        orderService.refuseOrder(orderId);
-        return ResponseEntity.ok("Commande refusée");
-    }
-
 
 }

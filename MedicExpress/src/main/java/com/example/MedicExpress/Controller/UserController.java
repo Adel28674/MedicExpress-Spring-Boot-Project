@@ -31,10 +31,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
-        @GetMapping("/getAll")
-        public ResponseEntity<List<UserEntity>> getAllUsers(){
-            return ResponseEntity.ok(userService.getAllUsers());
-        }
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserEntity>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
     @PostMapping("/addUsers")
     public ResponseEntity<String> addUsers(@RequestBody List<UserEntity> usersEntity){

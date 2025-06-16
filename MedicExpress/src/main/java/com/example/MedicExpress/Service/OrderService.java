@@ -125,33 +125,4 @@ public class OrderService {
     public List<NotificationEntity> getNotificationsForDriver(Long driverId) {
         return notificationRepository.findByDeliveryDriverId(driverId);
     }
-
-    @Transactional
-    public void acceptOrder(Long orderId) {
-        OrderEntity order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Commande introuvable"));
-        order.setStatus("IN_DELIVERY");
-        orderRepository.save(order);
-
-        notificationRepository.findAll()
-                .stream()
-                .filter(n -> n.getOrder().getId().equals(orderId))
-                .findFirst()
-                .ifPresent(n -> {
-                    n.setRead(true);
-                    notificationRepository.save(n);
-                });
-    }
-
-    @Transactional
-    public void refuseOrder(Long orderId) {
-        orderRepository.deleteById(orderId);
-
-        notificationRepository.findAll()
-                .stream()
-                .filter(n -> n.getOrder().getId().equals(orderId))
-                .forEach(n -> notificationRepository.deleteById(n.getId()));
-    }
-
-
 }
