@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -105,7 +107,22 @@ public class OrderController {
         return ResponseEntity.ok("Commande validée !");
     }
 
+    @GetMapping("/by-prescription/{prescriptionId}")
+    public ResponseEntity<Map<String, String>> getOrderByPrescription(@PathVariable Long prescriptionId) {
+        Optional<OrderEntity> orderOpt = orderRepository.findFirstByPrescriptionIdAndStatusNotIn(
+                prescriptionId,
+                List.of(OrderStatus.DELIVERED, OrderStatus.CANCELLED)
+        );
 
+        if (orderOpt.isPresent()) {
+            OrderEntity order = orderOpt.get();
+            Map<String, String> response = new HashMap<>();
+            response.put("status", order.getStatus().toString());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 }
