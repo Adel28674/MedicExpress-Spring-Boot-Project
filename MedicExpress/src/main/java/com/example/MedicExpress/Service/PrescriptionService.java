@@ -53,4 +53,8 @@ public class PrescriptionService {
         return prescriptionRepository.save(prescriptionEntity);
     }
 
+    public List<PrescriptionEntity> getPrescriptionsByPatientId(Long patientId) {
+        return prescriptionRepository.findByPatient_Id(patientId);
+    }
+
 }

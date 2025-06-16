@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -34,5 +35,8 @@ public class PatientService {
         return orderRepository.findByPatientId(patientId);
     }
 
+    public Optional<PatientEntity> findById(Long id) {
+        return patientRepository.findById(id);
+    }
 
 }

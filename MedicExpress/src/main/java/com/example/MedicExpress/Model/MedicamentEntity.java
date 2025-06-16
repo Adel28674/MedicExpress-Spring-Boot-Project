@@ -1,5 +1,6 @@
 package com.example.MedicExpress.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +20,6 @@ public class MedicamentEntity {
 
     @ManyToOne
     @JoinColumn(name = "prescription_id", nullable = false)
+    @JsonBackReference  // <-- ajoute cette annotation ici
     private PrescriptionEntity prescription;
 }

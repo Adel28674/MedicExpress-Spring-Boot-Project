@@ -21,9 +21,4 @@ public class PatientEntity {
 
     @Column(name = "address")
     private String address;
-
-
-
-
-
 }
