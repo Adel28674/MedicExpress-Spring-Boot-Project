@@ -51,6 +51,11 @@ public class PatientController {
         return ResponseEntity.ok(deliveredOrders);
     }
 
+
+    @PostMapping("/createOrder")
+    public OrderEntity createOrder(@RequestBody CreateOrderRequest request) {
+        return patientService.createOrder(request);
+    }
     // ---- Évaluation du livreur ----
 
 //    @PostMapping("/evaluate")

@@ -39,51 +39,6 @@ public class OrderService {
     private NotificationRepository notificationRepository;
 
 
-    /*public OrderEntity createOrder(CreateOrderRequest request) {
-
-        if (!deliveryDriverRepository.existsById(request.getDeliveryDriverId())) {
-            throw new RuntimeException("Livreur introuvable.");
-        }
-        if (!pharmacyRepository.existsById(request.getPharmacyId())) {
-            throw new RuntimeException("Pharmacie introuvable.");
-        }
-        if (!patientRepository.existsById(request.getPatientId())) {
-            throw new RuntimeException("Patient introuvable.");
-        }
-        if (!prescriptionRepository.existsById(request.getPrescriptionId())) {
-            throw new RuntimeException("Ordonnance introuvable.");
-        }
-
-        OrderEntity order = new OrderEntity();
-        order.setDate(new java.sql.Date(System.currentTimeMillis()));
-        order.setStatus(OrderStatus.PENDING_DRIVER_RESPONSE);
-
-        order.setPharmacy(pharmacyRepository.findById(request.getPharmacyId()).get());
-        order.setPatient(patientRepository.findById(request.getPatientId()).get());
-        order.setPrescription(prescriptionRepository.findById(request.getPrescriptionId()).get());
-
-        DeliveryDriverEntity driver = deliveryDriverRepository.findById(request.getDeliveryDriverId())
-                .orElseThrow(() -> new RuntimeException("Livreur introuvable"));
-
-        try {
-            String qrText = "https://votre-domaine.com/verify-order/" + order.getId();
-            String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
-            order.setQrcode(qrCodeBase64);
-            NotificationEntity notif = new NotificationEntity();
-            notif.setDeliveryDriver(order.getDeliveryDriver());
-            notif.setOrder(order);
-            notif.setMessage("Nouvelle commande disponible");
-            notificationRepository.save(notif);
-            return orderRepository.save(order);
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur QR code");
-        }
-
-        return orderRepository.save(order);
-
-    }*/
-
-
 
     @Transactional
     public OrderEntity updateOrderStatus(Long orderId) {
