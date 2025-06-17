@@ -46,7 +46,7 @@ public class OrderController {
         order.setStatus(OrderStatus.WAITING_FOR_DRIVER);
 
         try {
-            String qrText = "http://localhost:3000/CheckCode/" + order.getId();
+            String qrText = "http://localhost:3000/CheckCode/";
             String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
             order.setQrcode(qrCodeBase64);
         } catch (Exception e) {
