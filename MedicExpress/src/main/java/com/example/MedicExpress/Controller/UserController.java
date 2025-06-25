@@ -2,7 +2,9 @@ package com.example.MedicExpress.Controller;
 
 import com.example.MedicExpress.Exception.UserAlreadyExistException;
 import com.example.MedicExpress.Model.PatientEntity;
+import com.example.MedicExpress.Model.Role;
 import com.example.MedicExpress.Model.UserEntity;
+import com.example.MedicExpress.Repository.UserRepository;
 import com.example.MedicExpress.SerializationClass.AuthRequest;
 import com.example.MedicExpress.SerializationClass.UserUpdateRequest;
 import com.example.MedicExpress.Service.UserService;
@@ -22,6 +24,9 @@ public class UserController {
 
     @Autowired
     private final UserService userService;
+
+    @Autowired
+    private final UserRepository userRepository;
 
     @GetMapping("/welcome")
     public ResponseEntity<String> welcome(){
@@ -77,6 +82,13 @@ public class UserController {
         userService.deleteAll();
         return ResponseEntity.ok("");
     }
+
+    @GetMapping("/patients")
+    public ResponseEntity<List<UserEntity>> getPatients() {
+        List<UserEntity> patients = userRepository.findByRole(Role.PATIENT);
+        return ResponseEntity.ok(patients);
+    }
+
 
 
 }

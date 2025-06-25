@@ -12,9 +12,14 @@ import lombok.Setter;
 public class PharmacyEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private UserEntity user;
+
+
 
     @Column(name = "name")
     private String name;

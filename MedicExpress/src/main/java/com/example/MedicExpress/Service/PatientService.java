@@ -32,8 +32,9 @@ public class PatientService {
     }
 
     public List<OrderEntity> getOrdersForPatient(Long patientId) {
-        return orderRepository.findByPatientId(patientId);
+        return orderRepository.findByPatient(patientId);
     }
+
 
 
 
@@ -57,7 +58,7 @@ public class PatientService {
         order.setStatus(OrderStatus.PENDING_DRIVER_RESPONSE);
 
         order.setPharmacy(pharmacyRepository.findById(request.getPharmacyId()).get());
-        order.setPatient(patientRepository.findById(request.getPatientId()).get());
+        order.setPatient(request.getPatientId());
         order.setPrescription(prescriptionRepository.findById(request.getPrescriptionId()).get());
 
         DeliveryDriverEntity driver = deliveryDriverRepository.findById(request.getDeliveryDriverId())
@@ -71,7 +72,8 @@ public class PatientService {
     }
 
     public List<OrderEntity> getDeliveredOrdersForPatient(Long patientId) {
-        return orderRepository.findByStatusAndPatientId("DELIVERED", patientId);
+
+        return orderRepository.findByStatusAndPatient("DELIVERED", patientId);
     }
 
 

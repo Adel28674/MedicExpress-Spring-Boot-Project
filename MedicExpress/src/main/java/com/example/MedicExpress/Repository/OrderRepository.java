@@ -13,10 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
-    List<OrderEntity> findByPatientId(Long patientId);
+    List<OrderEntity> findByPatient(Long patientId);
+
     Optional<OrderEntity> findFirstByPrescriptionIdAndStatusNotIn(Long prescriptionId, List<OrderStatus> excludedStatuses);
 
-    List<OrderEntity> findByStatusAndPatientId(String status, Long patientId);
+    List<OrderEntity> findByStatusAndPatient(String status, Long patient);
 
     List<OrderEntity> findByPrescriptionId(Long prescriptionId);
 

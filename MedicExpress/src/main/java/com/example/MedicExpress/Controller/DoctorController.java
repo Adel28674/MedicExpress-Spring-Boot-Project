@@ -4,8 +4,10 @@ package com.example.MedicExpress.Controller;
 import com.example.MedicExpress.Model.DoctorEntity;
 import com.example.MedicExpress.Service.DoctorService;
 
+import com.example.MedicExpress.Service.PrescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,9 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
+    @Autowired
+    private PrescriptionService prescriptionService;
+
     @GetMapping("/allDoctor")
     public List<DoctorEntity> getAllDoctors() {
         return doctorService.getAllDoctors();
@@ -29,7 +34,6 @@ public class DoctorController {
     public DoctorEntity getDoctor(@PathVariable Long id) {
         return doctorService.getDoctorById(id);
     }
-
 
 
 }

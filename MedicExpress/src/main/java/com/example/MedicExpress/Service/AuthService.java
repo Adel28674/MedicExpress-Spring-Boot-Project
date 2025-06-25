@@ -56,36 +56,39 @@ public class AuthService implements UserDetailsService {
     }
 
     public UserEntity saveUser(SignUpRequest signupRequest) {
-        // Étape 1 : créer et sauvegarder le user pour obtenir son ID
+
         UserEntity user = new UserEntity();
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRole(signupRequest.getRole());
+        user.setName(signupRequest.getName());
+        user.setFirstName(signupRequest.getFirstName());
 
-        // 🔥 Sauvegarde initiale pour que l'ID soit généré
         UserEntity savedUser = userRepository.save(user);
 
-        // Étape 2 : créer l'entité liée selon le rôle
         switch (savedUser.getRole()) {
             case PATIENT -> {
                 PatientEntity patient = new PatientEntity();
-                patient.setId(savedUser.getId()); // ID désormais non null
+                patient.setUser(savedUser); // Associe bien le User
                 patientRepository.save(patient);
             }
             case DOCTOR -> {
                 DoctorEntity doctor = new DoctorEntity();
-                doctor.setId(savedUser.getId());
+                doctor.setUser(savedUser);
                 doctor.setRpps(signupRequest.getRpps());
                 doctorRepository.save(doctor);
+
+
             }
             case DELIVERY_DRIVER -> {
                 DeliveryDriverEntity driver = new DeliveryDriverEntity();
-                driver.setId(savedUser.getId());
+                driver.setUser(savedUser);
                 deliveryDriverRepository.save(driver);
+
             }
             case PHARMACIST -> {
                 PharmacyEntity pharmacy = new PharmacyEntity();
-                pharmacy.setId(savedUser.getId());
+                pharmacy.setUser(savedUser);
                 pharmacyRepository.save(pharmacy);
             }
             case ADMIN -> {

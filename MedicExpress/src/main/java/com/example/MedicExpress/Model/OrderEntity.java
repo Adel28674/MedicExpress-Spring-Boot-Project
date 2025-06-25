@@ -38,9 +38,8 @@ public class OrderEntity {
     @JoinColumn(name = "deliverydriver", referencedColumnName = "id")
     private DeliveryDriverEntity deliveryDriver;
 
-    @ManyToOne
-    @JoinColumn(name = "patient", referencedColumnName = "id")
-    private PatientEntity patient;
+    @Column(name = "patient")
+    private long patient;
 
     @ManyToOne
     @JoinColumn(name = "pharmacy", referencedColumnName = "id")

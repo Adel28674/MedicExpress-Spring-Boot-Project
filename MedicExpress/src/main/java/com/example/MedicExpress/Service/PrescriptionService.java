@@ -1,10 +1,7 @@
 package com.example.MedicExpress.Service;
 
 
-import com.example.MedicExpress.Model.DoctorEntity;
-import com.example.MedicExpress.Model.MedicamentEntity;
-import com.example.MedicExpress.Model.PatientEntity;
-import com.example.MedicExpress.Model.PrescriptionEntity;
+import com.example.MedicExpress.Model.*;
 import com.example.MedicExpress.Repository.DoctorRepository;
 import com.example.MedicExpress.Repository.PatientRepository;
 import com.example.MedicExpress.Repository.PrescriptionRepository;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PrescriptionService {
@@ -56,5 +54,7 @@ public class PrescriptionService {
     public List<PrescriptionEntity> getPrescriptionsByPatientId(Long patientId) {
         return prescriptionRepository.findByPatient_Id(patientId);
     }
+
+
 
 }

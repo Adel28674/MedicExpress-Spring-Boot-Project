@@ -9,16 +9,21 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@Table(name = "patient")
+@Table(name = "patients")
 public class PatientEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private UserEntity user;
 
     @Column(name = "sex")
     private String sex;
 
     @Column(name = "address")
     private String address;
+
 }

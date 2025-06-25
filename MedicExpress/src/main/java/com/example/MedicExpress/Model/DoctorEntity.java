@@ -9,11 +9,14 @@ import lombok.Setter;
 @Getter
 @Table(name = "doctors")
 public class DoctorEntity {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private UserEntity user;
 
     @Column(name = "rpps")
     private String rpps;

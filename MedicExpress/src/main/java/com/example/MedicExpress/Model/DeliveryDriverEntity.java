@@ -15,6 +15,11 @@ public class DeliveryDriverEntity {
     @Column(name = "id")
     private Long id;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private UserEntity user;
+
     @Column(name = "kbis")
     private String kbis;
 
