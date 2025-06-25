@@ -1,9 +1,5 @@
 package com.example.MedicExpress.Confinguration;
 
-import com.example.MedicExpress.Service.UserService;
-import com.example.MedicExpress.Utils.JwtAuthFilter;
-import com.example.MedicExpress.Utils.JwtUtils;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +15,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import com.example.MedicExpress.Service.UserService;
+import com.example.MedicExpress.Utils.JwtAuthFilter;
+import com.example.MedicExpress.Utils.JwtUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/prescription/**").hasRole("DOCTOR")
                         .requestMatchers("/api/patient/**").hasRole("PATIENT")
                         .requestMatchers("/api/deliveryDriver/**").hasRole("DELIVERY_DRIVER")
                         .requestMatchers("/api/pharmacist/**").hasRole("PHARMACIST")

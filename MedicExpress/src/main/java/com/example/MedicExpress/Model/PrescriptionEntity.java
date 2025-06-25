@@ -1,11 +1,19 @@
 package com.example.MedicExpress.Model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -19,11 +27,11 @@ public class PrescriptionEntity {
 
     @ManyToOne
     @JoinColumn(name = "doctor")
-    private DoctorEntity doctorEntity;
+    private UserEntity doctor;
 
     @ManyToOne
-    @JoinColumn(name = "patient")  // Ce champ correspond à la colonne 'patient' en base
-    private PatientEntity patient;
+    @JoinColumn(name = "patient")
+    private UserEntity patient;
 
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicamentEntity> medicaments = new ArrayList<>();
