@@ -1,9 +1,7 @@
 package com.example.MedicExpress.Service;
 
-import com.example.MedicExpress.Model.*;
-import com.example.MedicExpress.Repository.*;
-import com.example.MedicExpress.SerializationClass.SignUpRequest;
-import lombok.RequiredArgsConstructor;
+import java.util.Collections;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,8 +11,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Optional;
+import com.example.MedicExpress.Model.DeliveryDriverEntity;
+import com.example.MedicExpress.Model.DoctorEntity;
+import com.example.MedicExpress.Model.PatientEntity;
+import com.example.MedicExpress.Model.PharmacyEntity;
+import com.example.MedicExpress.Model.UserEntity;
+import com.example.MedicExpress.Repository.AdminRepository;
+import com.example.MedicExpress.Repository.DeliveryDriverRepository;
+import com.example.MedicExpress.Repository.DoctorRepository;
+import com.example.MedicExpress.Repository.PatientRepository;
+import com.example.MedicExpress.Repository.PharmacyRepository;
+import com.example.MedicExpress.Repository.UserRepository;
+import com.example.MedicExpress.SerializationClass.SignUpRequest;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +61,7 @@ public class AuthService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
         );
     }
 

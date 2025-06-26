@@ -3,6 +3,8 @@ package com.example.MedicExpress.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +36,6 @@ public class PrescriptionEntity {
     private UserEntity patient;
 
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<MedicamentEntity> medicaments = new ArrayList<>();
 }

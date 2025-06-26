@@ -1,10 +1,17 @@
 package com.example.MedicExpress.Model;
 
-import jakarta.persistence.*;
+import java.sql.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.sql.Date;
 
 @Entity
 @Setter
@@ -38,7 +45,7 @@ public class OrderEntity {
 
     @ManyToOne
     @JoinColumn(name = "patient", referencedColumnName = "id")
-    private PatientEntity patient;
+    private UserEntity patient;
 
     @ManyToOne
     @JoinColumn(name = "pharmacy", referencedColumnName = "id")

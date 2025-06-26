@@ -12,7 +12,6 @@ import com.example.MedicExpress.Model.CreateOrderRequest;
 import com.example.MedicExpress.Model.DeliveryDriverEntity;
 import com.example.MedicExpress.Model.MedicamentEntity;
 import com.example.MedicExpress.Model.OrderEntity;
-import com.example.MedicExpress.Model.PatientEntity;
 import com.example.MedicExpress.Model.PharmacyEntity;
 import com.example.MedicExpress.Model.PrescriptionEntity;
 import com.example.MedicExpress.Model.QRCodeGenerator;
@@ -124,8 +123,13 @@ public class PatientService {
         PharmacyEntity pharmacy = pharmacyRepository.findById(request.getPharmacyId())
                 .orElseThrow(() -> new RuntimeException("Pharmacy not found"));
 
-        PatientEntity patient = patientRepository.findById(request.getPatientId())
+        // Find user with PATIENT role by ID (same architecture as prescriptions)
+        UserEntity patient = userRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
+        
+        if (patient.getRole() != com.example.MedicExpress.Model.Role.PATIENT) {
+            throw new RuntimeException("User with ID " + request.getPatientId() + " is not a patient");
+        }
 
         PrescriptionEntity prescription = prescriptionRepository.findById(request.getPrescriptionId())
                 .orElseThrow(() -> new RuntimeException("Prescription not found"));
