@@ -17,7 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.example.MedicExpress.Service.UserService;
+import com.example.MedicExpress.Service.AuthService;
 import com.example.MedicExpress.Utils.JwtAuthFilter;
 import com.example.MedicExpress.Utils.JwtUtils;
 
@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
                         .requestMatchers("/api/prescription/**").hasRole("DOCTOR")
                         .requestMatchers("/api/patient/**").hasRole("PATIENT")
+                        .requestMatchers("/api/order/**").hasAnyRole("PATIENT", "DOCTOR", "PHARMACIST", "DELIVERY_DRIVER")
                         .requestMatchers("/api/deliveryDriver/**").hasRole("DELIVERY_DRIVER")
                         .requestMatchers("/api/pharmacist/**").hasRole("PHARMACIST")
                         .anyRequest().authenticated()
@@ -53,7 +54,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserService userDetailsService, BCryptPasswordEncoder passwordEncoder) {
+    public DaoAuthenticationProvider authenticationProvider(AuthService userDetailsService, BCryptPasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);

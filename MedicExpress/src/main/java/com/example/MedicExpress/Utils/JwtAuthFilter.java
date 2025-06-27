@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.MedicExpress.Service.UserService;
+import com.example.MedicExpress.Service.AuthService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,7 +24,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -53,7 +53,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             System.out.println("🔍 JWT DEBUG: Extracted email: " + email);
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userService.loadUserByUsername(email);
+                UserDetails userDetails = authService.loadUserByUsername(email);
                 System.out.println("🔍 JWT DEBUG: User found: " + email + ", authorities: " + userDetails.getAuthorities());
 
                 if (jwtUtils.isTokenValid(jwt, userDetails)) {
