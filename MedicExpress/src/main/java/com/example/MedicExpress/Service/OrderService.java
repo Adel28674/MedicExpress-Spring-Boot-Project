@@ -1,19 +1,18 @@
 package com.example.MedicExpress.Service;
 
-import com.example.MedicExpress.Model.*;
-import com.example.MedicExpress.Repository.*;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Base64;
+import com.example.MedicExpress.Model.CreateOrderRequest;
+import com.example.MedicExpress.Model.OrderEntity;
+import com.example.MedicExpress.Model.QRCodeGenerator;
+import com.example.MedicExpress.Repository.DeliveryDriverRepository;
+import com.example.MedicExpress.Repository.OrderRepository;
+import com.example.MedicExpress.Repository.PharmacyRepository;
+import com.example.MedicExpress.Repository.PrescriptionRepository;
+import com.example.MedicExpress.Repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 
 @Service
@@ -29,7 +28,7 @@ public class OrderService {
     private PharmacyRepository pharmacyRepository;
 
     @Autowired
-    private PatientRepository patientRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
@@ -44,7 +43,7 @@ public class OrderService {
             throw new RuntimeException("Pharmacie introuvable.");
         }
 
-        if (!patientRepository.existsById(request.getPatientId())) {
+        if (!userRepository.existsById(request.getPatientId())) {
             throw new RuntimeException("Patient introuvable.");
         }
 
@@ -59,7 +58,7 @@ public class OrderService {
 
         order.setDeliveryDriver(deliveryDriverRepository.findById(request.getDeliveryDriverId()).get());
         order.setPharmacy(pharmacyRepository.findById(request.getPharmacyId()).get());
-        order.setPatient(patientRepository.findById(request.getPatientId()).get());
+        order.setPatient(userRepository.findById(request.getPatientId()).get());
         order.setPrescription(prescriptionRepository.findById(request.getPrescriptionId()).get());
 
         // code aleatoire
