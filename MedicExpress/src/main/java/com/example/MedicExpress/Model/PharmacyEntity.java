@@ -19,8 +19,6 @@ public class PharmacyEntity {
     @JoinColumn(name = "id")
     private UserEntity user;
 
-
-
     @Column(name = "name")
     private String name;
 

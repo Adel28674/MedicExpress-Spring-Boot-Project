@@ -39,14 +39,10 @@ public class OrderController {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Commande introuvable"));
 
-        if (order.getStatus() != OrderStatus.PENDING_DRIVER_RESPONSE) {
-            return ResponseEntity.badRequest().body("La commande n'est pas en attente.");
-        }
-
         order.setStatus(OrderStatus.WAITING_FOR_DRIVER);
 
         try {
-            String qrText = "http://localhost:3000/CheckCode/";
+            String qrText = "http://localhost:3000/CheckCode/" + orderId;
             String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64(qrText, 200, 200);
             order.setQrcode(qrCodeBase64);
         } catch (Exception e) {
@@ -55,6 +51,7 @@ public class OrderController {
 
         return ResponseEntity.ok(orderRepository.save(order));
     }
+
 
     @PostMapping("/{orderId}/refuse")
     public ResponseEntity<?> refuseOrder(@PathVariable Long orderId) {
@@ -123,5 +120,14 @@ public class OrderController {
         }
     }
 
-
+        @GetMapping("/{id}")
+        public ResponseEntity<?> getOrderById(@PathVariable Long id) {
+            Optional<OrderEntity> optionalOrder = orderRepository.findById(id);
+            if (optionalOrder.isPresent()) {
+                OrderEntity order = optionalOrder.get();
+                return ResponseEntity.ok(order);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
 }

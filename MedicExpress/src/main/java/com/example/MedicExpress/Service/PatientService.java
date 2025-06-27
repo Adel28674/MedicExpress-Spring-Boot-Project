@@ -5,6 +5,7 @@ import com.example.MedicExpress.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -22,10 +23,13 @@ public class PatientService {
     private PharmacyRepository pharmacyRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private NotificationRepository notificationRepository;
+
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private OrderRepository orderRepository;
+
+
 
     public List<PrescriptionEntity> getPrescriptionsForPatient(Long patientId) {
         return prescriptionRepository.findByPatient_Id(patientId);
@@ -66,6 +70,19 @@ public class PatientService {
 
         order.setDeliveryDriver(driver);
         order.setCode(String.valueOf((int)(Math.random() * 900000) + 100000));
+
+        OrderEntity savedOrder = orderRepository.save(order);
+
+
+        NotificationEntity notification = new NotificationEntity();
+        notification.setMessage("Would you like to accept a new order ? #" + savedOrder.getId());
+        notification.setDeliveryDriver(driver);
+        notification.setOrder(savedOrder);
+        notification.setRead(false);
+        notification.setCreatedAt(new Date(System.currentTimeMillis()));
+
+        notificationRepository.save(notification);
+
 
         return orderRepository.save(order);
 

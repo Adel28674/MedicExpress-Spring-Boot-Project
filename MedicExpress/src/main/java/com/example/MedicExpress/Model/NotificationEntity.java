@@ -30,4 +30,9 @@ public class NotificationEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;
+
+    public Long getOrderIdRaw() {
+        return order != null ? order.getId() : null;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.MedicExpress.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class PrescriptionEntity {
     private List<MedicamentEntity> medicaments = new ArrayList<>();
 
     @ManyToOne
+    @JsonIgnoreProperties
     @JoinColumn(name = "patient")
     private PatientEntity patient;
 

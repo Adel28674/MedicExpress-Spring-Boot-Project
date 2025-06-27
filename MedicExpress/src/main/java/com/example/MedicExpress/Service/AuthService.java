@@ -69,7 +69,9 @@ public class AuthService implements UserDetailsService {
         switch (savedUser.getRole()) {
             case PATIENT -> {
                 PatientEntity patient = new PatientEntity();
-                patient.setUser(savedUser); // Associe bien le User
+                patient.setUser(savedUser);
+                patient.setSex("Null");
+                patient.setAddress("Null");
                 patientRepository.save(patient);
             }
             case DOCTOR -> {
